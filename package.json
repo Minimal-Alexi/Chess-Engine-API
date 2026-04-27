@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Chess engine",
   "main": "index.js",
-  "type":"module",
+  "type": "module",
   "directories": {
     "doc": "docs"
   },
@@ -15,5 +15,8 @@
   "license": "ISC",
   "dependencies": {
     "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
   }
 }
