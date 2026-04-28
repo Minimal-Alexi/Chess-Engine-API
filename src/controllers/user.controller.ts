@@ -1,8 +1,9 @@
-import { User } from "../models/user.model";
+import {User, createUser} from '../models/user.model';
 
-const createUser = async (username: string, email: string, password: string) => {
-    const user = new User({ username, email, password });
-    return await user.save();
+
+
+const registerUser = async (username: string, email: string, password: string) => {
+    return await createUser(username, email, password);
 }
 
-export { createUser };
+export { registerUser };
