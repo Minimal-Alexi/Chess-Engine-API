@@ -5,7 +5,7 @@ dotenv.config({
   path: '.env',
 });
 
-import connectDB from './config/database';
+import { connectDB } from './config/database';
 import { PORT } from './config/constants';
 
 const startServer = async () => {
