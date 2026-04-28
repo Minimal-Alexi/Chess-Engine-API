@@ -1,4 +1,4 @@
-import express from 'express';
+import app from './app';
 import dotenv from 'dotenv';
 
 dotenv.config({
@@ -7,8 +7,6 @@ dotenv.config({
 
 import connectDB from './config/database';
 import { PORT } from './config/constants';
-
-const app = express();
 
 const startServer = async () => {
   try {
