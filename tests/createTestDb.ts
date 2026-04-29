@@ -3,8 +3,6 @@ import { newDb } from 'pg-mem';
 export function createTestDb() {
   const db = newDb();
 
-  db.public.none(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`);
-
   db.public.none(`
 -- USERS TABLE
 CREATE TABLE users (
