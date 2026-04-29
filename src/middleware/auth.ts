@@ -13,7 +13,7 @@ const requireAuth = (req: Request, res: Response, next: NextFunction) => {
 
   try {
     const {_id}  = jwt.verify(token, SECRET) as { _id: number };
-    // req.user = await User.findById(_id);
+    req.body.userID = { _id };
     next();
   } catch (error) {
     return res.status(401).json({ error: "Invalid authorization token" });
