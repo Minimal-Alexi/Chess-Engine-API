@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
-import {User, createUser, findUserByEmail} from '../models/user.model';
+import {User} from '../models/user.model'
+import { findUserByEmail, createUser } from '../service/user.service';
 import createToken from '../utils/createToken';
 
 const registerUser = async (req: Request, res: Response) => {
@@ -16,11 +17,7 @@ const registerUser = async (req: Request, res: Response) => {
         const user = await createUser(username, email, password);
         res.status(201).json({
             "message": "User registered successfully",
-            "user": {
-                "session_id": createToken(user.id),
-                "username": user.username,
-                "email": user.email
-            }
+            "user": user.toJSON()
         });
     } catch (error) {
         console.error('Error registering user:', error);
@@ -40,11 +37,7 @@ const loginUser = async (req: Request, res: Response) => {
         }
         res.status(200).json({
             "message": "Login successful",
-            "user": {
-                "session_id": createToken(user.id),
-                "username": user.username,
-                "email": user.email
-            }
+            "user": user.toJSON()
         });
     } catch (error) {
         console.error('Error logging in user:', error);
