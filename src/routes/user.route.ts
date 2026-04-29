@@ -9,6 +9,7 @@ router.post('/register', async (req, res) => {
         const user = await registerUser(username, email, password);
         res.status(201).json(user);
     } catch (error) {
+        console.error('E: Error registering user:', error);
         res.status(500).json({ error: 'Failed to create user' });
     }
 });
