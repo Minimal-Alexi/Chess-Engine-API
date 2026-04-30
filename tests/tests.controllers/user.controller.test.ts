@@ -59,50 +59,79 @@ describe('User Controller', () => {
           .expect('Content-Type', /application\/json/);
       }
       );
-    it("Should salt the passwords", async () => {
-      const user = {
-        username: 'salteduser',
-        email: 'saltedemail@example.com',
-        password: 'saltedpassword'
-      };
-      await api
-        .post('/api/v1/users/register')
-        .send(user)
-        .expect(201)
-        .expect('Content-Type', /application\/json/);
+      it("Should salt the passwords", async () => {
+        const user = {
+          username: 'salteduser',
+          email: 'saltedemail@example.com',
+          password: 'saltedpassword'
+        };
+        await api
+          .post('/api/v1/users/register')
+          .send(user)
+          .expect(201)
+          .expect('Content-Type', /application\/json/);
 
-      const result = await pool.query('SELECT password FROM users WHERE email = $1', [user.email]);
-      const storedPassword = result.rows[0].password;
-      expect(storedPassword).not.toBe(user.password);
-      expect(bcrypt.compareSync(user.password, storedPassword)).toBe(true);
-    });
-    it("Should check registration fields.", async () => {
-      const user = {
-        username: 'salteduser',
-        email: null,
-        password: null
-      };
-      await api
-        .post('/api/v1/users/register')
-        .send(user)
-        .expect(400)
-        .expect('Content-Type', /application\/json/);
-    });
-    it("Should check if the email is valid.", async () => {
+        const result = await pool.query('SELECT password FROM users WHERE email = $1', [user.email]);
+        const storedPassword = result.rows[0].password;
+        expect(storedPassword).not.toBe(user.password);
+        expect(bcrypt.compareSync(user.password, storedPassword)).toBe(true);
+      });
+      it("Should check registration fields.", async () => {
+        const user = {
+          username: 'salteduser',
+          email: null,
+          password: null
+        };
+        await api
+          .post('/api/v1/users/register')
+          .send(user)
+          .expect(400)
+          .expect('Content-Type', /application\/json/);
+      });
+      it("Should check if the email is valid.", async () => {
 
-      const user = {
-        username: 'validuser',
-        email: 'invalid-email',
-        password: 'validpassword'
-      };
-      await api
-        .post('/api/v1/users/register')
-        .send(user)
-        .expect(400)
-        .expect('Content-Type', /application\/json/);
+        const user = {
+          username: 'validuser',
+          email: 'invalid-email',
+          password: 'validpassword'
+        };
+        await api
+          .post('/api/v1/users/register')
+          .send(user)
+          .expect(400)
+          .expect('Content-Type', /application\/json/);
+      });
     });
+    describe('User Login', () => {
+      it('Should login an existing user', async () => {
+        const credentials = {
+          email: 'test1@example.com',
+          password: 'password1'
+        };
+        await api
+          .post('/api/v1/users/login')
+          .send(credentials)
+          .expect(200)
+          .expect('Content-Type', /application\/json/);
+      });
     });
-  });
+    it('Should not login with wrong credentials', async () => {
+      const credentials = {
+          email: 'test1@example.com',
+          password: 'badpassword'
+        };
+        await api
+          .post('/api/v1/users/login')
+          .send(credentials)
+          .expect(401)
+          .expect('Content-Type', /application\/json/)
+          .expect(res => {
+            expect(res.body.user).toHaveProperty('session_id');
+            expect(res.body.user).toHaveProperty('email', credentials.email);
+            expect(res.body.user).not.toHaveProperty('password');
+          });
+      });
+    });
 });
 
 afterEach(async () => {
