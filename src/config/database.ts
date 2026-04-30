@@ -1,13 +1,24 @@
-import mongoose from 'mongoose';
+import { Pool } from 'pg';
+
+// Create a new pool instance
+const pool = new Pool({
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: parseInt(process.env.DB_PORT as string) || 5432,
+});
 
 const connectDB = async () => {
     try {
-        const connectionInstance = await mongoose.connect(process.env.MONGO_URI as string);
-        console.log('D: MongoDB connected successfully\n', `Host: ${connectionInstance.connection.host}\n`, `Database: ${connectionInstance.connection.name}`);
+        await pool.connect();
+        console.log('D: Successfully connected to the database');
     } catch (error) {
-        console.error('E: MongoDB connection error:', error);
-        process.exit(1);
+        console.error('E: Failed to connect to the database', error);
     }
 };
 
-export default connectDB;
+export {
+    connectDB,
+    pool
+}

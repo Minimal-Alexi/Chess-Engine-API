@@ -4,7 +4,7 @@
     "module": "nodenext",
     "moduleResolution": "NodeNext",
 
-    "rootDir": "src",
+    "rootDir": ".",
     "outDir": "dist",
 
     "strict": true,
@@ -14,8 +14,10 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "sourceMap": true,
-    "removeComments": true
+    "removeComments": true,
+
+    "types": ["jest", "node"]
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
