@@ -12,7 +12,7 @@ export const findUserById = async (id: number): Promise<User | null> => {
     }
 
     return new User(
-        row.id,
+        row.user_id,
         row.username,
         row.email,
         row.password
@@ -29,7 +29,7 @@ export const findUserByEmail = async (email: string): Promise<User | null> => {
     }
 
     return new User(
-        row.id,
+        row.user_id,
         row.username,
         row.email,
         row.password
@@ -45,7 +45,7 @@ export const createUser = async (username: string, email: string, password: stri
     const row = result.rows[0];
 
     return new User(
-        row.id,
+        row.user_id,
         row.username,
         row.email,
         row.password
