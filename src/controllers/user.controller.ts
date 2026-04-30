@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { findUserByEmail, createUser } from '../service/user.service';
-
+import bcrypt from 'bcrypt';
+import { NR_OF_SALTING_ROUNDS } from '../config/constants';
 
 const registerUser = async (req: Request, res: Response) => {
     const { username, email, password } = req.body;
@@ -13,7 +14,11 @@ const registerUser = async (req: Request, res: Response) => {
             return res.status(400).json({ "message": "User with this email already exists" });
         }
 
-        const user = await createUser(username, email, password);
+        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            return res.status(400).json({ "message": "Invalid email format" });
+        }
+
+        const user = await createUser(username, email, bcrypt.hashSync(password, NR_OF_SALTING_ROUNDS).toString());
         res.status(201).json({
             "message": "User registered successfully",
             "user": user.toJSON()
@@ -31,7 +36,7 @@ const loginUser = async (req: Request, res: Response) => {
             return res.status(400).json({ "message": "Email and password are required" });
         }
         const user = await findUserByEmail(email);
-        if (!user || user.password !== password) {
+        if (!user || !bcrypt.compareSync(password, user.password)) {
             return res.status(401).json({ "message": "Invalid email or password" });
         }
         res.status(200).json({
