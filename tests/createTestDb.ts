@@ -45,6 +45,5 @@ CREATE TABLE player (
   return {
     db,
     pool: new pg.Pool(),
-    client: new pg.Client()
   };
 }
