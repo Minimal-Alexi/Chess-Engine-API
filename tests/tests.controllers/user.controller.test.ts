@@ -58,7 +58,3 @@ describe('User Controller', () => {
 afterEach(async () => {
   await pool.query('DELETE FROM users');
 });
-
-afterAll(async () => {
-  await pool.end();
-});
