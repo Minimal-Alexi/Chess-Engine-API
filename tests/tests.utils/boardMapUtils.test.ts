@@ -72,7 +72,7 @@ describe("Test createBoardMap function", () => {
         const boardMap5 = createBoardMap(fen5)
         expect(boardMap5).toEqual(expectedBoardMap5)
     });
-    
+
     it("Should return null for an invalid FEN string", () => {
         const fen = "invalid-fen-string";
         const boardMap = createBoardMap(fen);
@@ -119,6 +119,49 @@ describe ("Test createFenString function", () => {
         const fen2 = createFenString(boardMap2)
         expect(fen2).toEqual(expectedFen2)
 
+        const boardMap3 = [
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', 'k', ' ', ' ', ' ', ' ', ' ', ' '],
+        ]
+        const expectedFen3 = "8/8/8/8/8/8/8/1k6"
+        const fen3 = createFenString(boardMap3)
+        expect(fen3).toEqual(expectedFen3)
+
+        const boardMap4 = [
+            [' ', ' ', ' ', 'k', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        ]
+        const expectedFen4 ="3k4/8/8/8/8/8/8/8"
+        const fen4 = createFenString(boardMap4)
+        expect(fen4).toEqual(expectedFen4)
+
+
+        const boardMap5 = [
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', 'r'],
+        ]
+        const expectedFen5 = "8/8/8/8/8/8/8/7r"
+        const fen5 = createFenString(boardMap5)
+        expect(fen5).toEqual(expectedFen5)
+
     });
     it("Should return null for an invalid board map", () => {
         const boardMap = [
@@ -133,6 +176,32 @@ describe ("Test createFenString function", () => {
         ];
         const fen = createFenString(boardMap);
         expect(fen).toBeNull();
+
+        const boardMap2 = [
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        ];
+        const fen2 = createFenString(boardMap2);
+        expect(fen2).toBeNull();
+
+        const boardMap3 = [
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ','q'],
+        ];
+        const fen3 = createFenString(boardMap3);
+        expect(fen3).toBeNull();
+
     });
 });
 
