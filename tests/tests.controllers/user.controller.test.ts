@@ -1,10 +1,5 @@
-import PG from "pg";
-import { createTestDb } from "../createTestDb";
 import bcrypt from 'bcrypt';
 import { NR_OF_SALTING_ROUNDS } from "../../src/config/constants";
-
-let pool: PG.Pool;
-
 import app from '../../src/app';
 import supertest from 'supertest';
 
@@ -19,14 +14,14 @@ jest.mock('../../src/config/database', () => {
   };
 });
 
+const pool = require('../../src/config/database').pool;
+
 beforeEach(async () => {
-  const { pool: testPool } = createTestDb();
-  pool = testPool;
   await pool.query(`
-    INSERT INTO users (user_id,username, email, password)
+    INSERT INTO users (username, email, password)
     VALUES
-      (1, 'test1', 'test1@example.com', '${bcrypt.hashSync('password1', NR_OF_SALTING_ROUNDS).toString()}'),
-      (2, 'test2', 'test2@example.com', '${bcrypt.hashSync('password2', NR_OF_SALTING_ROUNDS).toString()}');
+      ('test1', 'test1@example.com', '${bcrypt.hashSync('password1', NR_OF_SALTING_ROUNDS).toString()}'),
+      ('test2', 'test2@example.com', '${bcrypt.hashSync('password2', NR_OF_SALTING_ROUNDS).toString()}');
   `);
 });
 
@@ -61,5 +56,9 @@ describe('User Controller', () => {
   });
 
 afterEach(async () => {
+  await pool.query('DELETE FROM users');
+});
+
+afterAll(async () => {
   await pool.end();
 });
