@@ -114,9 +114,8 @@ describe('User Controller', () => {
           .expect(200)
           .expect('Content-Type', /application\/json/);
       });
-    });
-    it('Should not login with wrong credentials', async () => {
-      const credentials = {
+      it('Should not login with wrong credentials', async () => {
+        const credentials = {
           email: 'test1@example.com',
           password: 'badpassword'
         };
@@ -132,6 +131,7 @@ describe('User Controller', () => {
           });
       });
     });
+  });
 });
 
 afterEach(async () => {
