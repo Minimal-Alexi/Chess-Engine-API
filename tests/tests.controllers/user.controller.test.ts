@@ -124,11 +124,6 @@ describe('User Controller', () => {
           .send(credentials)
           .expect(401)
           .expect('Content-Type', /application\/json/)
-          .expect(res => {
-            expect(res.body.user).toHaveProperty('session_id');
-            expect(res.body.user).toHaveProperty('email', credentials.email);
-            expect(res.body.user).not.toHaveProperty('password');
-          });
       });
     });
   });
