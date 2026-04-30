@@ -44,8 +44,8 @@ export const createFenString = (boardMap: Array<Array<string>>): string | null =
             }
             else if ((char >= 'a' && char <= 'z') || (char >= 'A' && char <= 'Z')) {
                 // console.log('Concatenating at ' + i + ',' + j + ': ' + emptyCount.toString() + char)
-                emptyCount = 0;
                 fen += ((emptyCount != 0) ? emptyCount.toString() + char : char);
+                emptyCount = 0;
             }
         }
         // console.log('Concatenating at ' + i + ': ' + (emptyCount != 0) ? emptyCount.toString() + '/' : '/')
