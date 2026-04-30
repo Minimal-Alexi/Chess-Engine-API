@@ -1,4 +1,4 @@
-import createBoardMap from "../utils/boardMapUtils";
+import {createBoardMap} from "../utils/boardMapUtils";
 
 export class Game {
     id: number;

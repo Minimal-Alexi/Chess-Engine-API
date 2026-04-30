@@ -1,4 +1,4 @@
-import createBoardMap from "../../src/utils/boardMapUtils";
+import {createBoardMap, createFenString} from "../../src/utils/boardMapUtils";
 
 describe("Test createBoardMap function", () => {
     it("Should create a board map from a FEN string", () => {
@@ -36,4 +36,36 @@ describe("Test createBoardMap function", () => {
         expect(boardMap).toBeNull();
     }
     )
+});
+
+describe ("Test createFenString function", () => {
+    it("Should create a FEN string from a board map", () => {
+        const boardMap = [
+            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+        ];
+        const expectedFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+        const fen = createFenString(boardMap);
+        expect(fen).toEqual(expectedFen);
+    });
+    it("Should return null for an invalid board map", () => {
+        const boardMap = [
+            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'N', 'B', 'Q', 'K', 'B', 'N']
+        ];
+        const fen = createFenString(boardMap);
+        expect(fen).toBeNull();
+    });
 });
