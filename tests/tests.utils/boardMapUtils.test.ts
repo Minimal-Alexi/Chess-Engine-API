@@ -207,6 +207,34 @@ describe ("Test createFenString function", () => {
 
 describe("Test createFenString and createBoardMap compitability", () => {
     it("createFenString and createBoardMap should be compatible with eachother.", () => {
+        const boardMap = [
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', 'r'],
+        ]
+        const fen = "8/8/8/8/8/8/8/7r"
 
+        expect(createFenString(createBoardMap(fen)!)).toBe(fen)
+        expect(createBoardMap(createFenString(boardMap)!)).toStrictEqual(boardMap)
+
+        const boardMap2 = [
+            ['r', ' ', 'b', 'q', 'k', 'b', 'n', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', 'n', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+        ];
+        const fen2 = "r1bqkbnr/pppppppp/2n5/8/8/8/PPPPPPPP/RNBQKBNR";
+
+        expect(createFenString(createBoardMap(fen2)!)).toBe(fen2)
+        expect(createBoardMap(createFenString(boardMap2)!)).toStrictEqual(boardMap2)
     })
 })
