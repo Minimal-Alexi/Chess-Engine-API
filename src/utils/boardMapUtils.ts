@@ -70,7 +70,8 @@ export const createFenString = (boardMap: Array<Array<string>>): string | null =
         * destination: The destination of the piece.
         * team: The team string.
     Explanation:
-    First check if the piece selected is fromt the correct team, then the code checks if the move that they made is legal.
+    First check if the piece selected is from the correct team, check if the destination has a piece of the same team as the moving piece,
+    then check if the move is legal.
 */
 export const vaildateMove = (map : Array<Array<String>>, start: [number, number], destination: [number, number], team: String): boolean => {
 
@@ -86,7 +87,8 @@ export const vaildateMove = (map : Array<Array<String>>, start: [number, number]
         * destination: The destination of the piece.
         * team: The team string.
     Explanation:
-    Code checks if the right team tried to move a chess piece, then validates the move, changes the fen string, and then it checks for either check or checkmate.
+    Code checks if the right team tried to move a chess piece, check if the destination and start are within bounds, then validates the move,
+    changes the fen string.
 */
 export const makeMove = (fen : String, start: [number, number], destination: [number, number], team: String): String => {
     return "";
