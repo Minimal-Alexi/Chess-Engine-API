@@ -238,3 +238,57 @@ describe("Test createFenString and createBoardMap compitability", () => {
         expect(createBoardMap(createFenString(boardMap2)!)).toStrictEqual(boardMap2)
     })
 })
+
+describe("Test validateMove function", () => {
+    describe("Test a pawn being able to move", () => {
+        it("One tile away.", () => {
+
+        })
+        it("Two tiles away.", () => {
+
+        })
+        it("En Passant", () => {
+
+        })
+    })
+    describe("Test a knight being able to move",() => {
+        it("L shape.", () => {
+
+        })
+    })
+    describe("Test a bishop being able to move",() => {
+        it("Diagonal move.", () => {
+
+        })
+    })
+    describe("Test a rook being able to move",() => {
+        it("Horizontal move.", () => {
+
+        })
+        it("Vertical move.", () => {
+
+        })
+        it("Castle move.", () => {
+
+        })
+    })
+    describe("Test a queen being able to move", () => {
+        it("Should move like the bishop.", () => {
+
+        })
+        it("Should move like the rook.", () => {
+
+        })
+    })
+    describe("Test a king being able to move", () => {
+        it("Should be able to move one tile at a time.", () => {
+
+        })
+        it("Should be able to be castled.", () => {
+
+        })
+        it("Shouldn't be able to move on endangered tiles.", () => {
+
+        })
+    })
+})
