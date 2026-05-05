@@ -59,3 +59,12 @@ export const createFenString = (boardMap: Array<Array<string>>): string | null =
     return fen;
 
 }
+
+export const vaildateMove = (map : Array<Array<String>>, start: [number, number], destination: [number, number], team: String): boolean => {
+
+    return true;
+}
+
+export const makeMove = (fen : String, start: [number, number], destination: [number, number], team: String): String => {
+    return "";
+}
