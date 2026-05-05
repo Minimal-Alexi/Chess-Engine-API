@@ -1,3 +1,4 @@
+import e from "express";
 import {createBoardMap, createFenString, vaildateMove} from "../../src/utils/boardMapUtils";
 
 describe("Test createBoardMap function", () => {
@@ -450,20 +451,70 @@ THIS CAN BE FIXED BY ADDING A VARIABLE TO THE BOARD MAP THAT TRACKS THIS, BUT IT
     })
     describe("Test a king being able to move", () => {
         it("Should be able to move one tile at a time.", () => {
-
+            const boardMap = [
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', 'k', 'P', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+            ]
+            expect(vaildateMove(boardMap,[2,3],[1,3],"black")).toBe(true)
+            expect(vaildateMove(boardMap,[2,3],[3,3],"black")).toBe(false)
+            expect(vaildateMove(boardMap,[2,3],[2,4],"black")).toBe(true)
+            expect(vaildateMove(boardMap,[2,3],[2,2],"black")).toBe(true)
+            expect(vaildateMove(boardMap,[2,3],[1,4],"black")).toBe(true)
+            expect(vaildateMove(boardMap,[2,3],[1,2],"black")).toBe(true)
         })
 /*         it("Should be able to be castled.", () => {
 IMPORTANT: IMPOSSIBLE TO VALIDATE RIGHT NOW, AS THERE IS NO WAY TO KNOW IF THE KING OR ROOK HAS MOVED BEFORE, WHICH IS NECESSARY FOR CASTLING.
 THIS CAN BE FIXED BY ADDING A VARIABLE TO THE BOARD MAP THAT TRACKS THIS, BUT IT WOULD REQUIRE SIGNIFICANT CHANGES TO THE CODE, SO I'LL PROBABLY JUST LEAVE THIS OUT FOR NOW.
         }) */
-        it("Shouldn't be able to move on endangered tiles.", () => {
-            
+        it("Should be moved out of check, or saved from check, instead of any other move being legal.", () => {
+            const boardMap = [
+                ['k', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', 'B', ' ', ' ', ' ', ' ', ' '],
+                ['n', ' ', ' ', ' ', ' ', ' ', ' ', 'p'],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+            ]
+            expect(vaildateMove(boardMap,[3,7],[4,7],"black")).toBe(false)
+            expect(vaildateMove(boardMap,[3,0],[4,2],"black")).toBe(false)
+            expect(vaildateMove(boardMap,[3,0],[1,1],"black")).toBe(true)
+            expect(vaildateMove(boardMap,[3,0],[2,2],"black")).toBe(true)
         })
     })
     describe("Ensure teams are checked, so that players can't move illegal pieces.", () => {
-
+        const boardMap = [
+            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+        ]
+        expect(vaildateMove(boardMap,[6,0],[5,0],"black")).toBe(false)
+        expect(vaildateMove(boardMap,[1,0],[2,0],"white")).toBe(false)
     })
     describe("Ensure players can't move onto tiles occupied by their own pieces.", () => {
-
+        const boardMap = [
+            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+        ]
+        expect(vaildateMove(boardMap,[7,0],[6,0],"white")).toBe(false)
+        expect(vaildateMove(boardMap,[0,0],[1,0],"black")).toBe(false)
     })
 })
