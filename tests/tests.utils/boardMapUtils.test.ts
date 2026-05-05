@@ -341,11 +341,26 @@ describe("Test validateMove function", () => {
             ]
             expect(vaildateMove(boardMap,[4,2],[3,0],"white")).toBe(true)
             expect(vaildateMove(boardMap,[3,0],[4,2],"black")).toBe(true)
+            expect(vaildateMove(boardMap,[4,2],[3,4],"white")).toBe(true)
+            expect(vaildateMove(boardMap,[3,0],[1,1],"black")).toBe(true)
         })
     })
     describe("Test a bishop being able to move",() => {
         it("Diagonal move.", () => {
-
+            const boardMap = [
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', 'b', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', 'B', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+            ]
+            expect(vaildateMove(boardMap,[4,3],[3,2],"white")).toBe(true)
+            expect(vaildateMove(boardMap,[3,2],[4,3],"black")).toBe(true)
+            expect(vaildateMove(boardMap,[4,3],[3,4],"white")).toBe(true)
+            expect(vaildateMove(boardMap,[3,2],[4,1],"black")).toBe(true)
         })
     })
     describe("Test a rook being able to move",() => {
@@ -384,6 +399,6 @@ THIS CAN BE FIXED BY ADDING A VARIABLE TO THE BOARD MAP THAT TRACKS THIS, BUT IT
 
     })
     describe("Ensure players can't move onto tiles occupied by their own pieces.", () => {
-        
+
     })
 })
