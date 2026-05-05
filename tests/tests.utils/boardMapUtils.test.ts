@@ -1,4 +1,4 @@
-import {createBoardMap, createFenString} from "../../src/utils/boardMapUtils";
+import {createBoardMap, createFenString, vaildateMove} from "../../src/utils/boardMapUtils";
 
 describe("Test createBoardMap function", () => {
     it("Should create a board map from a FEN string", () => {
@@ -242,14 +242,90 @@ describe("Test createFenString and createBoardMap compitability", () => {
 describe("Test validateMove function", () => {
     describe("Test a pawn being able to move", () => {
         it("One tile away.", () => {
+            const boardMap = [
+                ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+                ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+                ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+            ]
+            expect(vaildateMove(boardMap,[6,0],[5,0],"white")).toBe(true)
+            expect(vaildateMove(boardMap,[1,0],[2,0],"black")).toBe(true)
 
+            const boardMapClose = [
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', 'p', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', 'P', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+            ]
+            expect(vaildateMove(boardMapClose,[4,2],[3,2],"white")).toBe(false)
+            expect(vaildateMove(boardMapClose,[3,2],[4,2],"black")).toBe(false)
         })
         it("Two tiles away.", () => {
+            const boardMap = [
+                ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+                ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+                ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+            ]
+            expect(vaildateMove(boardMap,[6,0],[4,0],"white")).toBe(true)
+            expect(vaildateMove(boardMap,[1,0],[3,0],"black")).toBe(true)
 
-        })
-        it("En Passant", () => {
+            const boardMapClose = [
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', 'p', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', 'P', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+            ]
+            expect(vaildateMove(boardMapClose,[4,2],[2,2],"white")).toBe(false)
+            expect(vaildateMove(boardMapClose,[3,2],[5,2],"black")).toBe(false)
 
+            const twoTilesAlreadyMoved = [
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', 'p', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', 'P', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+            ]
+            expect(vaildateMove(twoTilesAlreadyMoved,[4,3],[2,3],"white")).toBe(false)
+            expect(vaildateMove(twoTilesAlreadyMoved,[3,2],[5,2],"black")).toBe(false)
         })
+        it("Should take pawns one tile diagonally.", () => {
+            const boardMap =  [
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', 'p', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', 'P', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+            ]
+            expect(vaildateMove(boardMap,[4,3],[3,2],"white")).toBe(true)
+            expect(vaildateMove(boardMap,[3,2],[4,3],"black")).toBe(true)
+        })
+/*         it("En Passant", () => {
+            IMPORTANT: IMPOSSIBLE TO VALIDATE RIGHT NOW, AS THERE IS NO WAY TO KNOW IF A PAWN HAS JUST MOVED TWO TILES, WHICH IS NECESSARY FOR EN PASSANT.
+            THIS CAN BE FIXED BY ADDING A VARIABLE TO THE BOARD MAP THAT TRACKS THIS, BUT IT WOULD REQUIRE SIGNIFICANT CHANGES TO THE CODE, SO I'LL PROBABLY JUST LEAVE THIS OUT FOR NOW.
+        }) */
     })
     describe("Test a knight being able to move",() => {
         it("L shape.", () => {
@@ -268,9 +344,10 @@ describe("Test validateMove function", () => {
         it("Vertical move.", () => {
 
         })
-        it("Castle move.", () => {
-
-        })
+/*         it("Castle move.", () => {
+IMPORTANT: IMPOSSIBLE TO VALIDATE RIGHT NOW, AS THERE IS NO WAY TO KNOW IF THE KING OR ROOK HAS MOVED BEFORE, WHICH IS NECESSARY FOR CASTLING.
+THIS CAN BE FIXED BY ADDING A VARIABLE TO THE BOARD MAP THAT TRACKS THIS, BUT IT WOULD REQUIRE SIGNIFICANT CHANGES TO THE CODE, SO I'LL PROBABLY JUST LEAVE THIS OUT FOR NOW.
+        }) */
     })
     describe("Test a queen being able to move", () => {
         it("Should move like the bishop.", () => {
@@ -287,8 +364,12 @@ describe("Test validateMove function", () => {
         it("Should be able to be castled.", () => {
 
         })
-        it("Shouldn't be able to move on endangered tiles.", () => {
+/*         it("Shouldn't be able to move on endangered tiles.", () => {
+IMPORTANT: IMPOSSIBLE TO VALIDATE RIGHT NOW, AS THERE IS NO WAY TO KNOW IF THE KING OR ROOK HAS MOVED BEFORE, WHICH IS NECESSARY FOR CASTLING.
+THIS CAN BE FIXED BY ADDING A VARIABLE TO THE BOARD MAP THAT TRACKS THIS, BUT IT WOULD REQUIRE SIGNIFICANT CHANGES TO THE CODE, SO I'LL PROBABLY JUST LEAVE THIS OUT FOR NOW.
+        }) */
+    })
+    describe("Ensure teams are checked, so that players can't move illegal pieces.", () => {
 
-        })
     })
 })
