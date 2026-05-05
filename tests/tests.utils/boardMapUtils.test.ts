@@ -329,7 +329,18 @@ describe("Test validateMove function", () => {
     })
     describe("Test a knight being able to move",() => {
         it("L shape.", () => {
-
+            const boardMap = [
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                ['n', ' ', 'P', ' ', ' ', ' ', ' ', ' '],
+                ['p', ' ', 'N', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+            ]
+            expect(vaildateMove(boardMap,[4,2],[3,0],"white")).toBe(true)
+            expect(vaildateMove(boardMap,[3,0],[4,2],"black")).toBe(true)
         })
     })
     describe("Test a bishop being able to move",() => {
@@ -371,5 +382,8 @@ THIS CAN BE FIXED BY ADDING A VARIABLE TO THE BOARD MAP THAT TRACKS THIS, BUT IT
     })
     describe("Ensure teams are checked, so that players can't move illegal pieces.", () => {
 
+    })
+    describe("Ensure players can't move onto tiles occupied by their own pieces.", () => {
+        
     })
 })
