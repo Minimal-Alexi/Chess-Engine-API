@@ -383,16 +383,57 @@ describe("Test validateMove function", () => {
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-                [' ', ' ', 'r', ' ', ' ', ' ', ' ', ' '],
-                [' ', ' ', 'R', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', 'r', ' ', ' ', ' ', ' ', 'P'],
+                [' ', ' ', 'R', ' ', ' ', ' ', ' ', 'p'],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
             ]
+            expect(vaildateMove(boardMap,[4,2],[4,0],"white")).toBe(true)
+            expect(vaildateMove(boardMap,[3,2],[3,0],"black")).toBe(true)
+            expect(vaildateMove(boardMap,[4,2],[4,7],"white")).toBe(true)
+            expect(vaildateMove(boardMap,[3,2],[3,7],"black")).toBe(true)
 
+            const blockingPieceBoardMap = [
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', 'r', ' ', 'P', ' ', ' ', ' '],
+                [' ', ' ', 'R', ' ', 'p', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+            ]
+            expect(vaildateMove(blockingPieceBoardMap,[4,2],[4,7],"white")).toBe(false)
+            expect(vaildateMove(blockingPieceBoardMap,[3,2],[3,7],"black")).toBe(false)
         })
         it("Vertical move.", () => {
+            const boardMap = [
+                ['r', ' ', 'p', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', 'R', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                ['P', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+            ]
+            expect(vaildateMove(boardMap,[3,2],[0,2],"white")).toBe(true)
+            expect(vaildateMove(boardMap,[0,0],[7,0],"black")).toBe(true)
+            expect(vaildateMove(boardMap,[3,2],[7,2],"white")).toBe(true)
 
+            const blockingPieceBoardMap =  [
+                ['r', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', 'p', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', 'R', ' ', ' ', ' ', ' ', ' '],
+                ['P', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+            ]
+            expect(vaildateMove(blockingPieceBoardMap,[3,2],[0,2],"white")).toBe(false)
+            expect(vaildateMove(blockingPieceBoardMap,[0,0],[7,0],"black")).toBe(false)
         })
 /*         it("Castle move.", () => {
 IMPORTANT: IMPOSSIBLE TO VALIDATE RIGHT NOW, AS THERE IS NO WAY TO KNOW IF THE KING OR ROOK HAS MOVED BEFORE, WHICH IS NECESSARY FOR CASTLING.
