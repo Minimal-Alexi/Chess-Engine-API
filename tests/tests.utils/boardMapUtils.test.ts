@@ -361,13 +361,13 @@ THIS CAN BE FIXED BY ADDING A VARIABLE TO THE BOARD MAP THAT TRACKS THIS, BUT IT
         it("Should be able to move one tile at a time.", () => {
 
         })
-        it("Should be able to be castled.", () => {
-
-        })
-/*         it("Shouldn't be able to move on endangered tiles.", () => {
+/*         it("Should be able to be castled.", () => {
 IMPORTANT: IMPOSSIBLE TO VALIDATE RIGHT NOW, AS THERE IS NO WAY TO KNOW IF THE KING OR ROOK HAS MOVED BEFORE, WHICH IS NECESSARY FOR CASTLING.
 THIS CAN BE FIXED BY ADDING A VARIABLE TO THE BOARD MAP THAT TRACKS THIS, BUT IT WOULD REQUIRE SIGNIFICANT CHANGES TO THE CODE, SO I'LL PROBABLY JUST LEAVE THIS OUT FOR NOW.
         }) */
+        it("Shouldn't be able to move on endangered tiles.", () => {
+            
+        })
     })
     describe("Ensure teams are checked, so that players can't move illegal pieces.", () => {
 
