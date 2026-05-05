@@ -349,8 +349,8 @@ describe("Test validateMove function", () => {
         it("Diagonal move.", () => {
             const boardMap = [
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                ['P', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', 'p', ' ', ' '],
                 [' ', ' ', 'b', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', 'B', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -359,12 +359,36 @@ describe("Test validateMove function", () => {
             ]
             expect(vaildateMove(boardMap,[4,3],[3,2],"white")).toBe(true)
             expect(vaildateMove(boardMap,[3,2],[4,3],"black")).toBe(true)
-            expect(vaildateMove(boardMap,[4,3],[3,4],"white")).toBe(true)
-            expect(vaildateMove(boardMap,[3,2],[4,1],"black")).toBe(true)
+            expect(vaildateMove(boardMap,[4,3],[2,5],"white")).toBe(true)
+            expect(vaildateMove(boardMap,[3,2],[1,0],"black")).toBe(true)
+            
+            const blockingPieceBoardMap = [
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', 'P', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', 'b', ' ', 'p', ' ', ' ', ' '],
+                [' ', ' ', ' ', 'B', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+            ]            
+            expect(vaildateMove(boardMap,[4,3],[2,5],"white")).toBe(false)
+            expect(vaildateMove(blockingPieceBoardMap,[3,2],[1,0],"black")).toBe(false)
+            
         })
     })
     describe("Test a rook being able to move",() => {
         it("Horizontal move.", () => {
+            const boardMap = [
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', 'r', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', 'R', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+            ]
 
         })
         it("Vertical move.", () => {
