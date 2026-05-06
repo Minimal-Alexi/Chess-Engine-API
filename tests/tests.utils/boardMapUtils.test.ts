@@ -1,5 +1,5 @@
 import e from "express";
-import {createBoardMap, createFenString, vaildateMove} from "../../src/utils/boardMapUtils";
+import {createBoardMap, createFenString, validateMove} from "../../src/utils/boardMapUtils";
 
 describe("Test createBoardMap function", () => {
     it("Should create a board map from a FEN string", () => {
@@ -253,8 +253,8 @@ describe("Test validateMove function", () => {
                 ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
                 ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
             ]
-            expect(vaildateMove(boardMap,[6,0],[5,0],"white")).toBe(true)
-            expect(vaildateMove(boardMap,[1,0],[2,0],"black")).toBe(true)
+            expect(validateMove(boardMap,[6,0],[5,0],"white")).toBe(true)
+            expect(validateMove(boardMap,[1,0],[2,0],"black")).toBe(true)
 
             const boardMapClose = [
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -266,8 +266,8 @@ describe("Test validateMove function", () => {
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
             ]
-            expect(vaildateMove(boardMapClose,[4,2],[3,2],"white")).toBe(false)
-            expect(vaildateMove(boardMapClose,[3,2],[4,2],"black")).toBe(false)
+            expect(validateMove(boardMapClose,[4,2],[3,2],"white")).toBe(false)
+            expect(validateMove(boardMapClose,[3,2],[4,2],"black")).toBe(false)
         })
         it("Two tiles away.", () => {
             const boardMap = [
@@ -280,8 +280,8 @@ describe("Test validateMove function", () => {
                 ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
                 ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
             ]
-            expect(vaildateMove(boardMap,[6,0],[4,0],"white")).toBe(true)
-            expect(vaildateMove(boardMap,[1,0],[3,0],"black")).toBe(true)
+            expect(validateMove(boardMap,[6,0],[4,0],"white")).toBe(true)
+            expect(validateMove(boardMap,[1,0],[3,0],"black")).toBe(true)
 
             const boardMapClose = [
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -293,8 +293,8 @@ describe("Test validateMove function", () => {
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
             ]
-            expect(vaildateMove(boardMapClose,[4,2],[2,2],"white")).toBe(false)
-            expect(vaildateMove(boardMapClose,[3,2],[5,2],"black")).toBe(false)
+            expect(validateMove(boardMapClose,[4,2],[2,2],"white")).toBe(false)
+            expect(validateMove(boardMapClose,[3,2],[5,2],"black")).toBe(false)
 
             const twoTilesAlreadyMoved = [
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -306,8 +306,8 @@ describe("Test validateMove function", () => {
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
             ]
-            expect(vaildateMove(twoTilesAlreadyMoved,[4,3],[2,3],"white")).toBe(false)
-            expect(vaildateMove(twoTilesAlreadyMoved,[3,2],[5,2],"black")).toBe(false)
+            expect(validateMove(twoTilesAlreadyMoved,[4,3],[2,3],"white")).toBe(false)
+            expect(validateMove(twoTilesAlreadyMoved,[3,2],[5,2],"black")).toBe(false)
         })
         it("Should take pawns one tile diagonally.", () => {
             const boardMap =  [
@@ -320,8 +320,8 @@ describe("Test validateMove function", () => {
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
             ]
-            expect(vaildateMove(boardMap,[4,3],[3,2],"white")).toBe(true)
-            expect(vaildateMove(boardMap,[3,2],[4,3],"black")).toBe(true)
+            expect(validateMove(boardMap,[4,3],[3,2],"white")).toBe(true)
+            expect(validateMove(boardMap,[3,2],[4,3],"black")).toBe(true)
         })
 /*         it("En Passant", () => {
             IMPORTANT: IMPOSSIBLE TO VALIDATE RIGHT NOW, AS THERE IS NO WAY TO KNOW IF A PAWN HAS JUST MOVED TWO TILES, WHICH IS NECESSARY FOR EN PASSANT.
@@ -340,10 +340,10 @@ describe("Test validateMove function", () => {
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
             ]
-            expect(vaildateMove(boardMap,[4,2],[3,0],"white")).toBe(true)
-            expect(vaildateMove(boardMap,[3,0],[4,2],"black")).toBe(true)
-            expect(vaildateMove(boardMap,[4,2],[3,4],"white")).toBe(true)
-            expect(vaildateMove(boardMap,[3,0],[1,1],"black")).toBe(true)
+            expect(validateMove(boardMap,[4,2],[3,0],"white")).toBe(true)
+            expect(validateMove(boardMap,[3,0],[4,2],"black")).toBe(true)
+            expect(validateMove(boardMap,[4,2],[3,4],"white")).toBe(true)
+            expect(validateMove(boardMap,[3,0],[1,1],"black")).toBe(true)
         })
     })
     describe("Test a bishop being able to move",() => {
@@ -358,10 +358,10 @@ describe("Test validateMove function", () => {
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
             ]
-            expect(vaildateMove(boardMap,[4,3],[3,2],"white")).toBe(true)
-            expect(vaildateMove(boardMap,[3,2],[4,3],"black")).toBe(true)
-            expect(vaildateMove(boardMap,[4,3],[2,5],"white")).toBe(true)
-            expect(vaildateMove(boardMap,[3,2],[1,0],"black")).toBe(true)
+            expect(validateMove(boardMap,[4,3],[3,2],"white")).toBe(true)
+            expect(validateMove(boardMap,[3,2],[4,3],"black")).toBe(true)
+            expect(validateMove(boardMap,[4,3],[2,5],"white")).toBe(true)
+            expect(validateMove(boardMap,[3,2],[1,0],"black")).toBe(true)
             
             const blockingPieceBoardMap = [
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -373,8 +373,8 @@ describe("Test validateMove function", () => {
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
             ]            
-            expect(vaildateMove(boardMap,[4,3],[2,5],"white")).toBe(false)
-            expect(vaildateMove(blockingPieceBoardMap,[3,2],[1,0],"black")).toBe(false)
+            expect(validateMove(boardMap,[4,3],[2,5],"white")).toBe(false)
+            expect(validateMove(blockingPieceBoardMap,[3,2],[1,0],"black")).toBe(false)
             
         })
     })
@@ -390,10 +390,10 @@ describe("Test validateMove function", () => {
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
             ]
-            expect(vaildateMove(boardMap,[4,2],[4,0],"white")).toBe(true)
-            expect(vaildateMove(boardMap,[3,2],[3,0],"black")).toBe(true)
-            expect(vaildateMove(boardMap,[4,2],[4,7],"white")).toBe(true)
-            expect(vaildateMove(boardMap,[3,2],[3,7],"black")).toBe(true)
+            expect(validateMove(boardMap,[4,2],[4,0],"white")).toBe(true)
+            expect(validateMove(boardMap,[3,2],[3,0],"black")).toBe(true)
+            expect(validateMove(boardMap,[4,2],[4,7],"white")).toBe(true)
+            expect(validateMove(boardMap,[3,2],[3,7],"black")).toBe(true)
 
             const blockingPieceBoardMap = [
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -405,8 +405,8 @@ describe("Test validateMove function", () => {
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
             ]
-            expect(vaildateMove(blockingPieceBoardMap,[4,2],[4,7],"white")).toBe(false)
-            expect(vaildateMove(blockingPieceBoardMap,[3,2],[3,7],"black")).toBe(false)
+            expect(validateMove(blockingPieceBoardMap,[4,2],[4,7],"white")).toBe(false)
+            expect(validateMove(blockingPieceBoardMap,[3,2],[3,7],"black")).toBe(false)
         })
         it("Vertical move.", () => {
             const boardMap = [
@@ -419,9 +419,9 @@ describe("Test validateMove function", () => {
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 ['P', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
             ]
-            expect(vaildateMove(boardMap,[3,2],[0,2],"white")).toBe(true)
-            expect(vaildateMove(boardMap,[0,0],[7,0],"black")).toBe(true)
-            expect(vaildateMove(boardMap,[3,2],[7,2],"white")).toBe(true)
+            expect(validateMove(boardMap,[3,2],[0,2],"white")).toBe(true)
+            expect(validateMove(boardMap,[0,0],[7,0],"black")).toBe(true)
+            expect(validateMove(boardMap,[3,2],[7,2],"white")).toBe(true)
 
             const blockingPieceBoardMap =  [
                 ['r', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -433,8 +433,8 @@ describe("Test validateMove function", () => {
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
             ]
-            expect(vaildateMove(blockingPieceBoardMap,[3,2],[0,2],"white")).toBe(false)
-            expect(vaildateMove(blockingPieceBoardMap,[0,0],[7,0],"black")).toBe(false)
+            expect(validateMove(blockingPieceBoardMap,[3,2],[0,2],"white")).toBe(false)
+            expect(validateMove(blockingPieceBoardMap,[0,0],[7,0],"black")).toBe(false)
         })
 /*         it("Castle move.", () => {
 IMPORTANT: IMPOSSIBLE TO VALIDATE RIGHT NOW, AS THERE IS NO WAY TO KNOW IF THE KING OR ROOK HAS MOVED BEFORE, WHICH IS NECESSARY FOR CASTLING.
@@ -453,10 +453,10 @@ THIS CAN BE FIXED BY ADDING A VARIABLE TO THE BOARD MAP THAT TRACKS THIS, BUT IT
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
             ]
-            expect(vaildateMove(boardMap,[4,2],[2,0],"white")).toBe(true)
-            expect(vaildateMove(boardMap,[3,2],[1,0],"black")).toBe(true)
-            expect(vaildateMove(boardMap,[4,2],[2,4],"white")).toBe(true)
-            expect(vaildateMove(boardMap,[3,2],[1,4],"black")).toBe(true)
+            expect(validateMove(boardMap,[4,2],[2,0],"white")).toBe(true)
+            expect(validateMove(boardMap,[3,2],[1,0],"black")).toBe(true)
+            expect(validateMove(boardMap,[4,2],[2,4],"white")).toBe(true)
+            expect(validateMove(boardMap,[3,2],[1,4],"black")).toBe(true)
 
             const blockingPieceBoardMap = [
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -468,8 +468,8 @@ THIS CAN BE FIXED BY ADDING A VARIABLE TO THE BOARD MAP THAT TRACKS THIS, BUT IT
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
             ]
-            expect(vaildateMove(blockingPieceBoardMap,[3,2],[5,4],"white")).toBe(false)
-            expect(vaildateMove(blockingPieceBoardMap,[2,2],[0,0],"black")).toBe(false)
+            expect(validateMove(blockingPieceBoardMap,[3,2],[5,4],"white")).toBe(false)
+            expect(validateMove(blockingPieceBoardMap,[2,2],[0,0],"black")).toBe(false)
         })
         it("Should move like the rook.", () => {
             const boardMap = [
@@ -482,10 +482,10 @@ THIS CAN BE FIXED BY ADDING A VARIABLE TO THE BOARD MAP THAT TRACKS THIS, BUT IT
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
             ]
-            expect(vaildateMove(boardMap,[4,2],[4,0],"white")).toBe(true)
-            expect(vaildateMove(boardMap,[3,2],[3,0],"black")).toBe(true)
-            expect(vaildateMove(boardMap,[4,2],[7,2],"white")).toBe(true)
-            expect(vaildateMove(boardMap,[3,2],[0,2],"black")).toBe(true)
+            expect(validateMove(boardMap,[4,2],[4,0],"white")).toBe(true)
+            expect(validateMove(boardMap,[3,2],[3,0],"black")).toBe(true)
+            expect(validateMove(boardMap,[4,2],[7,2],"white")).toBe(true)
+            expect(validateMove(boardMap,[3,2],[0,2],"black")).toBe(true)
 
             const blockingPieceBoardMap = [
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -497,8 +497,8 @@ THIS CAN BE FIXED BY ADDING A VARIABLE TO THE BOARD MAP THAT TRACKS THIS, BUT IT
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
             ]
-            expect(vaildateMove(blockingPieceBoardMap,[4,2],[4,0],"white")).toBe(false)
-            expect(vaildateMove(blockingPieceBoardMap,[3,2],[3,0],"black")).toBe(false)
+            expect(validateMove(blockingPieceBoardMap,[4,2],[4,0],"white")).toBe(false)
+            expect(validateMove(blockingPieceBoardMap,[3,2],[3,0],"black")).toBe(false)
         })
     })
     describe("Test a king being able to move", () => {
@@ -513,12 +513,12 @@ THIS CAN BE FIXED BY ADDING A VARIABLE TO THE BOARD MAP THAT TRACKS THIS, BUT IT
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
             ]
-            expect(vaildateMove(boardMap,[2,3],[1,3],"black")).toBe(true)
-            expect(vaildateMove(boardMap,[2,3],[3,3],"black")).toBe(false)
-            expect(vaildateMove(boardMap,[2,3],[2,4],"black")).toBe(true)
-            expect(vaildateMove(boardMap,[2,3],[2,2],"black")).toBe(true)
-            expect(vaildateMove(boardMap,[2,3],[1,4],"black")).toBe(true)
-            expect(vaildateMove(boardMap,[2,3],[1,2],"black")).toBe(true)
+            expect(validateMove(boardMap,[2,3],[1,3],"black")).toBe(true)
+            expect(validateMove(boardMap,[2,3],[3,3],"black")).toBe(false)
+            expect(validateMove(boardMap,[2,3],[2,4],"black")).toBe(true)
+            expect(validateMove(boardMap,[2,3],[2,2],"black")).toBe(true)
+            expect(validateMove(boardMap,[2,3],[1,4],"black")).toBe(true)
+            expect(validateMove(boardMap,[2,3],[1,2],"black")).toBe(true)
         })
 /*         it("Should be able to be castled.", () => {
 IMPORTANT: IMPOSSIBLE TO VALIDATE RIGHT NOW, AS THERE IS NO WAY TO KNOW IF THE KING OR ROOK HAS MOVED BEFORE, WHICH IS NECESSARY FOR CASTLING.
@@ -535,10 +535,10 @@ THIS CAN BE FIXED BY ADDING A VARIABLE TO THE BOARD MAP THAT TRACKS THIS, BUT IT
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
             ]
-            expect(vaildateMove(boardMap,[3,7],[4,7],"black")).toBe(false)
-            expect(vaildateMove(boardMap,[3,0],[4,2],"black")).toBe(false)
-            expect(vaildateMove(boardMap,[3,0],[1,1],"black")).toBe(true)
-            expect(vaildateMove(boardMap,[3,0],[2,2],"black")).toBe(true)
+            expect(validateMove(boardMap,[3,7],[4,7],"black")).toBe(false)
+            expect(validateMove(boardMap,[3,0],[4,2],"black")).toBe(false)
+            expect(validateMove(boardMap,[3,0],[1,1],"black")).toBe(true)
+            expect(validateMove(boardMap,[3,0],[2,2],"black")).toBe(true)
         })
     })
     describe("Ensure teams are checked, so that players can't move illegal pieces.", () => {
@@ -552,8 +552,8 @@ THIS CAN BE FIXED BY ADDING A VARIABLE TO THE BOARD MAP THAT TRACKS THIS, BUT IT
             ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
             ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
         ]
-        expect(vaildateMove(boardMap,[6,0],[5,0],"black")).toBe(false)
-        expect(vaildateMove(boardMap,[1,0],[2,0],"white")).toBe(false)
+        expect(validateMove(boardMap,[6,0],[5,0],"black")).toBe(false)
+        expect(validateMove(boardMap,[1,0],[2,0],"white")).toBe(false)
     })
     describe("Ensure players can't move onto tiles occupied by their own pieces.", () => {
         const boardMap = [
@@ -566,7 +566,7 @@ THIS CAN BE FIXED BY ADDING A VARIABLE TO THE BOARD MAP THAT TRACKS THIS, BUT IT
             ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
             ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
         ]
-        expect(vaildateMove(boardMap,[7,0],[6,0],"white")).toBe(false)
-        expect(vaildateMove(boardMap,[0,0],[1,0],"black")).toBe(false)
+        expect(validateMove(boardMap,[7,0],[6,0],"white")).toBe(false)
+        expect(validateMove(boardMap,[0,0],[1,0],"black")).toBe(false)
     })
 })

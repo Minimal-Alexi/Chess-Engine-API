@@ -73,8 +73,11 @@ export const createFenString = (boardMap: Array<Array<string>>): string | null =
     First check if the piece selected is from the correct team, check if the destination has a piece of the same team as the moving piece,
     then check if the move is legal.
 */
-export const vaildateMove = (map : Array<Array<String>>, start: [number, number], destination: [number, number], team: String): boolean => {
-
+export const validateMove = (map : Array<Array<String>>, start: [number, number], destination: [number, number], team: String): boolean => {
+    const piece = map[start[0]][start[1]]
+    if((team == "white" && !(piece >= 'A' && piece <= 'Z')) || team == "black" && !(piece >= 'a' && piece <= 'z')){
+        return false
+    }
     return true;
 }
 
