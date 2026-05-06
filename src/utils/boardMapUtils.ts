@@ -106,13 +106,20 @@ export const checkAvailableAttacksForPiece = (
     const selectedPiece = map[selectedPieceLocation[0]][selectedPieceLocation[1]]
     const selectedPieceType = selectedPiece.toLowerCase()
     const coordsX = selectedPieceLocation[0], coordsY = selectedPieceLocation[1]
+    const isWhite = (selectedPiece >= 'A' && selectedPiece <= 'Z')
 
     const inBounds = (x:number, y:number) => x >= 0 && x <= 7 && y >= 0 && y <= 7
 
     switch (selectedPieceType) {
 
         case 'p': {
-            
+            const moves = [[1,1],[1,-1]]
+            const dir = isWhite == true ? -1 : 1
+            for(let move of moves){
+                if(inBounds(coordsX + move[0],coordsY + move[1])){
+                    mappedAttacks[coordsX + move[0] * dir][coordsY + move[1]] = 1
+                }
+            }
             break
         }
 
