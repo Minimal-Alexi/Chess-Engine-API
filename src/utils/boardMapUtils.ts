@@ -49,10 +49,10 @@ export const createFenString = (boardMap: Array<Array<string>>): string | null =
             }
         }
         // console.log('Concatenating at ' + i + ': ' + (emptyCount != 0) ? emptyCount.toString() + '/' : '/')
-        if(i < size - 1){
+        if (i < size - 1) {
             fen += ((emptyCount != 0) ? emptyCount.toString() + '/' : '/')
         }
-        else{
+        else {
             fen += ((emptyCount != 0) ? emptyCount.toString() : '')
         }
     }
@@ -75,41 +75,41 @@ export const createFenString = (boardMap: Array<Array<string>>): string | null =
     While checking if the move is legal, first check if the king is in danger, if the king is in danger, the move must save the king; then the move itself is validated.
     Otherwise, the move is just validated.
 */
-export const validateMove = (map : Array<Array<String>>, start: [number, number], destination: [number, number], team: string): boolean => {
+export const validateMove = (map: Array<Array<String>>, start: [number, number], destination: [number, number], team: string): boolean => {
     const piece = map[start[0]][start[1]]
     const destinationPiece = map[destination[0]][destination[1]]
 
-    if((team == "white" && !(piece >= 'A' && piece <= 'Z')) ||
-     team == "black" && !(piece >= 'a' && piece <= 'z')){
+    if ((team == "white" && !(piece >= 'A' && piece <= 'Z')) ||
+        team == "black" && !(piece >= 'a' && piece <= 'z')) {
         return false
     }
 
-    if((team == "white" && (destinationPiece >= 'A' && destinationPiece <= 'Z')) ||
-     team == "black" && (destinationPiece >= 'a' && destinationPiece <= 'z')){
+    if ((team == "white" && (destinationPiece >= 'A' && destinationPiece <= 'Z')) ||
+        team == "black" && (destinationPiece >= 'a' && destinationPiece <= 'z')) {
         return false
     }
 
     const pieceType = piece.toLowerCase()
-    const distance = [ destination[0] - start[0], destination[1] - start[1]]
-    switch(pieceType){
+    const distance = [destination[0] - start[0], destination[1] - start[1]]
+    switch (pieceType) {
         case 'p':
             {
                 const dir = team === "white" ? -1 : 1;
                 const startRow = team === "white" ? 6 : 1;
-                if((distance[0] == dir) && distance[1] == 0){
-                    if(map[destination[0]][destination[1]] != ' '){
+                if ((distance[0] == dir) && distance[1] == 0) {
+                    if (map[destination[0]][destination[1]] != ' ') {
                         return false
                     }
                     return true
                 }
-                if(distance[0] == dir * 2 && distance[1] == 0){
-                    if(map[destination[0]][destination[1]] != ' ' || start[0] != startRow){
+                if (distance[0] == dir * 2 && distance[1] == 0) {
+                    if (map[destination[0]][destination[1]] != ' ' || start[0] != startRow) {
                         return false
                     }
                     return true
                 }
-                if(distance[0] == dir && distance[1] == dir){
-                    if(map[destination[0]][destination[1]] == ' '){
+                if (distance[0] == dir && distance[1] == dir) {
+                    if (map[destination[0]][destination[1]] == ' ') {
                         return false
                     }
                     return true
@@ -118,25 +118,24 @@ export const validateMove = (map : Array<Array<String>>, start: [number, number]
             }
         case 'n':
             {
-                if((Math.abs(distance[0]) == 2 && Math.abs(distance[1]) == 1) ||
-                (Math.abs(distance[0]) == 1 && Math.abs(distance[1]) == 2)){
+                if ((Math.abs(distance[0]) == 2 && Math.abs(distance[1]) == 1) ||
+                    (Math.abs(distance[0]) == 1 && Math.abs(distance[1]) == 2)) {
                     return true
                 }
                 break
             }
         case 'b':
             {
-                if(Math.abs(distance[0]) != Math.abs(distance[1]))
-                    {
-                        return false
-                    }
+                if (Math.abs(distance[0]) != Math.abs(distance[1])) {
+                    return false
+                }
                 const sign = [Math.sign(distance[0]), Math.sign(distance[1])]
                 let i = start[0] + sign[0], j = start[1] + sign[1];
-                while(i >= 0 && i <= 7 && j >= 0 && j <= 7){
-                    if (i == destination[0] && j == destination[1]){
+                while (i >= 0 && i <= 7 && j >= 0 && j <= 7) {
+                    if (i == destination[0] && j == destination[1]) {
                         return true
                     }
-                    if(map[i][j] != ' '){
+                    if (map[i][j] != ' ') {
                         return false
                     }
                     i += sign[0]
@@ -146,36 +145,36 @@ export const validateMove = (map : Array<Array<String>>, start: [number, number]
             }
         case 'r':
             {
-                if (Math.abs(distance[0]) > 0 && Math.abs(distance[1]) > 0){
+                if (Math.abs(distance[0]) > 0 && Math.abs(distance[1]) > 0) {
                     return false
                 }
-                if(Math.abs(distance[0]) > 0){
+                if (Math.abs(distance[0]) > 0) {
                     const sign = Math.sign(distance[0])
                     let i = start[0] + sign
                     const j = start[1]
-                    while(i != destination[0]){
-                        if(map[i][j] != ' '){
+                    while (i != destination[0]) {
+                        if (map[i][j] != ' ') {
                             return false
                         }
-                        i+=sign
+                        i += sign
                     }
                 }
-                else{
+                else {
                     const sign = Math.sign(distance[1])
                     const i = start[0]
                     let j = start[1] + sign
-                    while(j != destination[1]){
-                        if(map[i][j] != ' '){
+                    while (j != destination[1]) {
+                        if (map[i][j] != ' ') {
                             return false
                         }
-                        j+=sign
+                        j += sign
                     }
                 }
                 return true
             }
         case 'q':
             {
-                break
+                
             }
         case 'k':
             {
@@ -199,6 +198,6 @@ export const validateMove = (map : Array<Array<String>>, start: [number, number]
     Code checks if the right team tried to move a chess piece, check if the destination and start are within bounds, then validates the move,
     changes the fen string.
 */
-export const makeMove = (fen : String, start: [number, number], destination: [number, number], team: String): String => {
+export const makeMove = (fen: String, start: [number, number], destination: [number, number], team: String): String => {
     return "";
 }
