@@ -1,5 +1,5 @@
 import e from "express";
-import {createBoardMap, createFenString, validateMove} from "../../src/utils/boardMapUtils";
+import {checkAvailableAttacksForPiece, createBoardMap, createFenString, validateMove} from "../../src/utils/boardMapUtils";
 
 describe("Test createBoardMap function", () => {
     it("Should create a board map from a FEN string", () => {
@@ -237,6 +237,246 @@ describe("Test createFenString and createBoardMap compitability", () => {
 
         expect(createFenString(createBoardMap(fen2)!)).toBe(fen2)
         expect(createBoardMap(createFenString(boardMap2)!)).toStrictEqual(boardMap2)
+    })
+})
+
+describe("Test checkAvailableAttacksForPiece function", () => {
+    it("Should create a pawns' attack map.", () => {
+        // Coords: [4, 2] (white pawn)
+        // Coords: [3, 2] (black pawn)
+        const boardMap = [
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', 'p', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', 'P', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+        ]
+        const expectedPawnAttackMapWhite = [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 1, 0, 1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0]
+        ]
+        const expectedPawnAttackMapBlack = [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 1, 0, 1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0]
+        ]
+        expect(checkAvailableAttacksForPiece(boardMap,[4,2])).toEqual(expectedPawnAttackMapWhite)
+        expect(checkAvailableAttacksForPiece(boardMap,[3,2])).toEqual(expectedPawnAttackMapBlack)
+    })
+    it("Should create a knights' attack map.", () => {
+        // Coords: [3, 3] (black knight)
+        const boardMap = [
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', 'n', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+        ]
+        const expectedKnightAttackMap = [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 1, 0, 1, 0, 0, 0],
+            [0, 1, 0, 0, 0, 1, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 1, 0, 0, 0, 1, 0, 0],
+            [0, 0, 1, 0, 1, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0]
+        ]
+        expect(checkAvailableAttacksForPiece(boardMap,[3,3])).toEqual(expectedKnightAttackMap)
+    })
+    describe("Should create a bishops' attack map",() => {
+        it("Without blocking pieces.", () => {
+            // Coords: [3, 3] (black bishop)
+            const boardMap = [
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', 'b', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+            ]
+            const expectedBishopAttackMap = [
+                [1, 0, 0, 0, 0, 0, 1, 0],
+                [0, 1, 0, 0, 0, 1, 0, 0],
+                [0, 0, 1, 0, 1, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 1, 0, 1, 0, 0, 0],
+                [0, 1, 0, 0, 0, 1, 0, 0],
+                [1, 0, 0, 0, 0, 0, 1, 0],
+                [0, 0, 0, 0, 0, 0, 0, 1]
+            ]
+            expect(checkAvailableAttacksForPiece(boardMap,[3,3])).toEqual(expectedBishopAttackMap)
+        })
+        it("With blocking pieces.", () => {
+            // Coords: [3, 3] (black bishop)
+            // Coords: [1, 1] (blocking piece)
+            const boardMap = [
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', 'P', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', 'b', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+            ]
+            const expectedBishopAttackMap = [
+                [0, 0, 0, 0, 0, 0, 1, 0],
+                [0, 1, 0, 0, 0, 1, 0, 0],
+                [0, 0, 1, 0, 1, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 1, 0, 1, 0, 0, 0],
+                [0, 1, 0, 0, 0, 1, 0, 0],
+                [1, 0, 0, 0, 0, 0, 1, 0],
+                [0, 0, 0, 0, 0, 0, 0, 1]
+            ]
+            expect(checkAvailableAttacksForPiece(boardMap,[3,3])).toEqual(expectedBishopAttackMap)
+    })
+    describe("Should create a rooks' attack map.", () => {
+        it("Without blocking pieces.", () => {
+            // Coords: [3, 3] (black rook)
+            const boardMap = [
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', 'r', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+            ]
+            const expectedRookAttackMap = [
+                [0, 0, 0, 1, 0, 0, 0, 0],
+                [0, 0, 0, 1, 0, 0, 0, 0],
+                [0, 0, 0, 1, 0, 0, 0, 0],
+                [1, 1, 1, 0, 1, 1, 1, 1],
+                [0, 0, 0, 1, 0, 0, 0, 0],
+                [0, 0, 0, 1, 0, 0, 0, 0],
+                [0, 0, 0, 1, 0, 0, 0, 0],
+                [0, 0, 0, 1, 0, 0, 0, 0]
+            ]
+            expect(checkAvailableAttacksForPiece(boardMap,[3,3])).toEqual(expectedRookAttackMap)
+        })
+        it("With blocking pieces.", () => {
+            // Coords: [3, 3] (black rook)
+            // Coords: [1, 3] (blocking piece)
+            const boardMap = [
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', 'P', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', 'r', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+                ]
+            const expectedRookAttackMap = [
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 1, 0, 0, 0, 0],
+                [0, 0, 0, 1, 0, 0, 0, 0],
+                [1, 1, 1, 0, 1, 1, 1, 1],
+                [0, 0, 0, 1, 0, 0, 0, 0],
+                [0, 0, 0, 1, 0, 0, 0, 0],
+                [0, 0, 0, 1, 0, 0, 0, 0],
+                [0, 0, 0, 1, 0, 0, 0, 0]
+            ]
+            expect(checkAvailableAttacksForPiece(boardMap,[3,3])).toEqual(expectedRookAttackMap)
+        })
+    })
+    describe("Should create a queens' attack map.", () => {
+        it("Without blocking pieces.", () => {
+            // Coords: [3, 3] (black queen)
+            const boardMap = [
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', 'q', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+            ]
+            const expectedQueenAttackMap = [
+                [1, 0, 0, 1, 0, 0, 1, 0],
+                [0, 1, 0, 1, 0, 1, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0, 0],
+                [1, 1, 1, 0, 1, 1, 1, 1],
+                [0, 0, 1, 1, 1, 0, 0, 0],
+                [0, 1, 0, 1, 0, 1, 0, 0],
+                [1, 0, 0, 1, 0, 0, 1, 0],
+                [0, 0, 0, 1, 0, 0, 0, 1]
+            ]
+            expect(checkAvailableAttacksForPiece(boardMap,[3,3])).toEqual(expectedQueenAttackMap)
+        })
+        it("With blocking pieces.", () => {
+            // Coords: [3, 3] (black queen)
+            // Coords: [1, 1] (blocking piece)
+            // Coords: [1, 3] (blocking piece)
+            const boardMap = [
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', 'P', ' ', 'P', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', 'q', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+            ]
+            const expectedQueenAttackMap = [
+                [0, 0, 0, 0, 0, 0, 1, 0],
+                [0, 1, 0, 1, 0, 1, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0, 0],
+                [1, 1, 1, 0, 1, 1, 1, 1],
+                [0, 0, 1, 1, 1, 0, 0, 0],
+                [0, 1, 0, 1, 0, 1, 0, 0],
+                [1, 0, 0, 1, 0, 0, 1, 0],
+                [0, 0, 0, 1, 0, 0, 0, 1]
+            ]
+            expect(checkAvailableAttacksForPiece(boardMap,[3,3])).toEqual(expectedQueenAttackMap)
+        })
+    })
+    it("Should create a kings' attack map", () => {
+        // Coords: [3, 3] (black king)
+        const boardMap = [
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', 'k', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+        ]
+        const expectedKingAttackMap = [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 1, 1, 1, 0, 0, 0],
+            [0, 0, 1, 0, 1, 0, 0, 0],
+            [0, 0, 1, 1, 1, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0]
+        ]
+        expect(checkAvailableAttacksForPiece(boardMap,[3,3])).toEqual(expectedKingAttackMap)
     })
 })
 
@@ -571,4 +811,4 @@ IMPORTANT: IMPOSSIBLE TO VALIDATE RIGHT NOW, AS THERE IS NO WAY TO KNOW IF THE K
 THIS CAN BE FIXED BY ADDING A VARIABLE TO THE BOARD MAP THAT TRACKS THIS, BUT IT WOULD REQUIRE SIGNIFICANT CHANGES TO THE CODE, SO I'LL PROBABLY JUST LEAVE THIS OUT FOR NOW.
         }) */
     })
-})
+})})
