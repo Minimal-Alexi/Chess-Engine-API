@@ -174,7 +174,45 @@ export const validateMove = (map: Array<Array<String>>, start: [number, number],
             }
         case 'q':
             {
-                
+                if (Math.abs(distance[0]) == Math.abs(distance[1])) {
+                    const sign = [Math.sign(distance[0]), Math.sign(distance[1])]
+                    let i = start[0] + sign[0], j = start[1] + sign[1];
+                    while (i >= 0 && i <= 7 && j >= 0 && j <= 7) {
+                        if (i == destination[0] && j == destination[1]) {
+                            return true
+                        }
+                        if (map[i][j] != ' ') {
+                            return false
+                        }
+                        i += sign[0]
+                        j += sign[1]
+                    }
+                }
+                if (Math.abs(distance[0]) > 0 && distance[1] == 0){
+                    const sign = Math.sign(distance[0])
+                    let i = start[0] + sign
+                    const j = start[1]
+                    while (i != destination[0]) {
+                        if (map[i][j] != ' ') {
+                            return false
+                        }
+                        i += sign
+                    }
+                    return true
+                }
+                if (Math.abs(distance[1]) > 0 && distance[0] == 0){
+                    const sign = Math.sign(distance[1])
+                    const i = start[0]
+                    let j = start[1] + sign
+                    while (j != destination[1]) {
+                        if (map[i][j] != ' ') {
+                            return false
+                        }
+                        j += sign
+                    }
+                    return true
+                }
+                break
             }
         case 'k':
             {
