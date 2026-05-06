@@ -72,6 +72,8 @@ export const createFenString = (boardMap: Array<Array<string>>): string | null =
     Explanation:
     First check if the piece selected is from the correct team, check if the destination has a piece of the same team as the moving piece,
     then check if the move is legal.
+    While checking if the move is legal, first check if the king is in danger, if the king is in danger, the move must save the king; then the move itself is validated.
+    Otherwise, the move is just validated.
 */
 export const validateMove = (map : Array<Array<String>>, start: [number, number], destination: [number, number], team: string): boolean => {
     const piece = map[start[0]][start[1]]
