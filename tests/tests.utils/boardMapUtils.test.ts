@@ -443,10 +443,62 @@ THIS CAN BE FIXED BY ADDING A VARIABLE TO THE BOARD MAP THAT TRACKS THIS, BUT IT
     })
     describe("Test a queen being able to move", () => {
         it("Should move like the bishop.", () => {
+            const boardMap = [
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', 'q', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', 'Q', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+            ]
+            expect(vaildateMove(boardMap,[4,2],[2,0],"white")).toBe(true)
+            expect(vaildateMove(boardMap,[3,2],[1,0],"black")).toBe(true)
+            expect(vaildateMove(boardMap,[4,2],[2,4],"white")).toBe(true)
+            expect(vaildateMove(boardMap,[3,2],[1,4],"black")).toBe(true)
 
+            const blockingPieceBoardMap = [
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', 'P', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', 'q', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', 'Q', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+            ]
+            expect(vaildateMove(blockingPieceBoardMap,[3,2],[5,4],"white")).toBe(false)
+            expect(vaildateMove(blockingPieceBoardMap,[2,2],[0,0],"black")).toBe(false)
         })
         it("Should move like the rook.", () => {
+            const boardMap = [
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', 'q', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', 'Q', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+            ]
+            expect(vaildateMove(boardMap,[4,2],[4,0],"white")).toBe(true)
+            expect(vaildateMove(boardMap,[3,2],[3,0],"black")).toBe(true)
+            expect(vaildateMove(boardMap,[4,2],[7,2],"white")).toBe(true)
+            expect(vaildateMove(boardMap,[3,2],[0,2],"black")).toBe(true)
 
+            const blockingPieceBoardMap = [
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', 'P', 'q', ' ', ' ', ' ', ' ', ' '],
+                [' ', 'p', 'Q', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+            ]
+            expect(vaildateMove(blockingPieceBoardMap,[4,2],[4,0],"white")).toBe(false)
+            expect(vaildateMove(blockingPieceBoardMap,[3,2],[3,0],"black")).toBe(false)
         })
     })
     describe("Test a king being able to move", () => {
