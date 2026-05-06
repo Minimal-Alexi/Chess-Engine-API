@@ -373,7 +373,7 @@ describe("Test validateMove function", () => {
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
             ]            
-            expect(validateMove(boardMap,[4,3],[2,5],"white")).toBe(false)
+            expect(validateMove(blockingPieceBoardMap,[4,3],[2,5],"white")).toBe(false)
             expect(validateMove(blockingPieceBoardMap,[3,2],[1,0],"black")).toBe(false)
             
         })
