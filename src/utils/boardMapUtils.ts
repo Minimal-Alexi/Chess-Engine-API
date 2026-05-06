@@ -75,7 +75,15 @@ export const createFenString = (boardMap: Array<Array<string>>): string | null =
 */
 export const validateMove = (map : Array<Array<String>>, start: [number, number], destination: [number, number], team: String): boolean => {
     const piece = map[start[0]][start[1]]
-    if((team == "white" && !(piece >= 'A' && piece <= 'Z')) || team == "black" && !(piece >= 'a' && piece <= 'z')){
+    const destinationPiece = map[destination[0]][destination[1]]
+
+    if((team == "white" && !(piece >= 'A' && piece <= 'Z')) ||
+     team == "black" && !(piece >= 'a' && piece <= 'z')){
+        return false
+    }
+
+    if((team == "white" && (destinationPiece >= 'A' && destinationPiece <= 'Z')) ||
+     team == "black" && (destinationPiece >= 'a' && destinationPiece <= 'z')){
         return false
     }
     return true;
