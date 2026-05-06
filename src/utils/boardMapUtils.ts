@@ -146,7 +146,32 @@ export const validateMove = (map : Array<Array<String>>, start: [number, number]
             }
         case 'r':
             {
-                break
+                if (Math.abs(distance[0]) > 0 && Math.abs(distance[1]) > 0){
+                    return false
+                }
+                if(Math.abs(distance[0]) > 0){
+                    const sign = Math.sign(distance[0])
+                    let i = start[0] + sign
+                    const j = start[1]
+                    while(i != destination[0]){
+                        if(map[i][j] != ' '){
+                            return false
+                        }
+                        i+=sign
+                    }
+                }
+                else{
+                    const sign = Math.sign(distance[1])
+                    const i = start[0]
+                    let j = start[1] + sign
+                    while(j != destination[1]){
+                        if(map[i][j] != ' '){
+                            return false
+                        }
+                        j+=sign
+                    }
+                }
+                return true
             }
         case 'q':
             {
