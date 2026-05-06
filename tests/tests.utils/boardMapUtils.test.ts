@@ -241,6 +241,52 @@ describe("Test createFenString and createBoardMap compitability", () => {
 })
 
 describe("Test validateMove function", () => {
+    it("Ensure teams are checked, so that players can't move illegal pieces.", () => {
+        const boardMap = [
+            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+        ]
+        expect(validateMove(boardMap,[6,0],[5,0],"black")).toBe(false)
+        expect(validateMove(boardMap,[1,0],[2,0],"white")).toBe(false)
+    })
+
+    it("Ensure players can't move onto tiles occupied by their own pieces.", () => {
+        const boardMap = [
+            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+        ]
+        expect(validateMove(boardMap,[7,0],[6,0],"white")).toBe(false)
+        expect(validateMove(boardMap,[0,0],[1,0],"black")).toBe(false)
+    })
+    it("Should check if the move can save the king from a check.", () => {
+            const boardMap = [
+                ['k', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', 'B', ' ', ' ', ' ', ' ', ' '],
+                ['n', ' ', ' ', ' ', ' ', ' ', ' ', 'p'],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+            ]
+            expect(validateMove(boardMap,[3,7],[4,7],"black")).toBe(false)
+            expect(validateMove(boardMap,[3,0],[4,2],"black")).toBe(false)
+            expect(validateMove(boardMap,[3,0],[1,1],"black")).toBe(true)
+            expect(validateMove(boardMap,[3,0],[2,2],"black")).toBe(true)
+        })
+
     describe("Test a pawn being able to move", () => {
         it("One tile away.", () => {
             const boardMap = [
@@ -524,49 +570,5 @@ THIS CAN BE FIXED BY ADDING A VARIABLE TO THE BOARD MAP THAT TRACKS THIS, BUT IT
 IMPORTANT: IMPOSSIBLE TO VALIDATE RIGHT NOW, AS THERE IS NO WAY TO KNOW IF THE KING OR ROOK HAS MOVED BEFORE, WHICH IS NECESSARY FOR CASTLING.
 THIS CAN BE FIXED BY ADDING A VARIABLE TO THE BOARD MAP THAT TRACKS THIS, BUT IT WOULD REQUIRE SIGNIFICANT CHANGES TO THE CODE, SO I'LL PROBABLY JUST LEAVE THIS OUT FOR NOW.
         }) */
-        it("Should be moved out of check, or saved from check, instead of any other move being legal.", () => {
-            const boardMap = [
-                ['k', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-                [' ', ' ', 'B', ' ', ' ', ' ', ' ', ' '],
-                ['n', ' ', ' ', ' ', ' ', ' ', ' ', 'p'],
-                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
-            ]
-            expect(validateMove(boardMap,[3,7],[4,7],"black")).toBe(false)
-            expect(validateMove(boardMap,[3,0],[4,2],"black")).toBe(false)
-            expect(validateMove(boardMap,[3,0],[1,1],"black")).toBe(true)
-            expect(validateMove(boardMap,[3,0],[2,2],"black")).toBe(true)
-        })
-    })
-    describe("Ensure teams are checked, so that players can't move illegal pieces.", () => {
-        const boardMap = [
-            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
-            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
-        ]
-        expect(validateMove(boardMap,[6,0],[5,0],"black")).toBe(false)
-        expect(validateMove(boardMap,[1,0],[2,0],"white")).toBe(false)
-    })
-    describe("Ensure players can't move onto tiles occupied by their own pieces.", () => {
-        const boardMap = [
-            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
-            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
-        ]
-        expect(validateMove(boardMap,[7,0],[6,0],"white")).toBe(false)
-        expect(validateMove(boardMap,[0,0],[1,0],"black")).toBe(false)
     })
 })
