@@ -130,7 +130,7 @@ export const validateMove = (map : Array<Array<String>>, start: [number, number]
                     {
                         return false
                     }
-                const sign = [distance[0] >= 0 ? 1 : -1, distance[1] >= 0 ? 1 : -1]
+                const sign = [Math.sign(distance[0]), Math.sign(distance[1])]
                 let i = start[0] + sign[0], j = start[1] + sign[1];
                 while(i >= 0 && i <= 7 && j >= 0 && j <= 7){
                     if (i == destination[0] && j == destination[1]){
