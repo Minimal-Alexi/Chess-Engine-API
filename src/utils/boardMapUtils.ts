@@ -216,6 +216,9 @@ export const validateMove = (map: Array<Array<String>>, start: [number, number],
             }
         case 'k':
             {
+                if(Math.abs(distance[0]) > 1 || Math.abs(distance[1]) > 1){
+                    return false
+                }
                 break
             }
     }
