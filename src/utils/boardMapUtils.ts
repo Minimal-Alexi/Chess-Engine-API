@@ -62,6 +62,73 @@ export const createFenString = (boardMap: Array<Array<string>>): string | null =
 
 
 /*
+    Name: movePiece
+    Creator: Minimal
+    Variables:
+        * map: A board map
+        * start: The starting pieces' location.
+        * destination: The destination of the piece.
+    Explanation:
+    Moves a piece from one tile to another, without checking for constraints. This is a helper function which should be called ONLY inside makeMove.
+*/
+const movePiece = (map: Array<Array<String>>, start: [number, number], destination: [number, number]) => {
+    let newMap = map
+    newMap[destination[0]][destination[1]] = map[start[0]][start[1]]
+    newMap[start[0]][start[1]] = ' '
+    return newMap
+}
+
+/*
+    Name: checkAvailableAttacksForPiece
+    Creator: Minimal
+    Variables:
+        * map: A board map
+        * pieceLocation: The coordinates of the piece that can be moved.
+    Explanation:
+    This function checks the pieces that can be attacked by the selected piece.
+*/
+export const checkAvailableAttacksForPiece = (map: Array<Array<String>>, selectedPieceLocation: [number, number]):Array<Array<number>> => {
+    let mappedAttacks = [
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0]
+    ]
+    const selectedPiece = map[selectedPieceLocation[0]][selectedPieceLocation[1]]
+    const selectedPieceType = selectedPiece.toLowerCase()
+    return mappedAttacks
+}
+
+/*
+    Name: isCheck
+    Creator: Minimal
+    Variables:
+        * map: A board map
+        * team: The team that needs to be verified if it's in check.
+    Explanation:
+    This function verifies if the appropiate teams' king is in check.
+*/
+export const isCheck = (map: Array<Array<string>>,team:string):boolean => {
+    return true
+}
+
+/*
+    Name: isCheckMate
+    Creator: Minimal
+    Variables:
+        * map: A board map
+        * team: The team that needs to be verified if it's in check.
+    Explanation:
+    This function verifies if the appropiate teams' king is in check.
+*/
+export const isCheckMate = (map: Array<Array<string>>,team:string):boolean => {
+    return true
+}
+/*
     Name: validateMove
     Creator: Minimal
     Variables:
