@@ -112,87 +112,31 @@ export const checkAvailableAttacksForPiece = (
     switch (selectedPieceType) {
 
         case 'p': {
-            const dir = (selectedPiece == 'P') ? -1 : 1
-            if (inBounds(coordsX + dir, coordsY - 1)) {
-                mappedAttacks[coordsX + dir][coordsY - 1] = 1
-            }
-            if (inBounds(coordsX + dir, coordsY + 1)) {
-                mappedAttacks[coordsX + dir][coordsY + 1] = 1
-            }
+            
             break
         }
 
         case 'n': {
-            const moves = [
-                [2,1],[2,-1],[-2,1],[-2,-1],
-                [1,2],[1,-2],[-1,2],[-1,-2]
-            ]
-            moves.forEach(([dx, dy]) => {
-                const x = coordsX + dx
-                const y = coordsY + dy
-                if (inBounds(x,y)) mappedAttacks[x][y] = 1
-            })
+
             break
         }
 
         case 'b': {
-            const directions = [[1,1],[1,-1],[-1,1],[-1,-1]]
-            directions.forEach(([dx, dy]) => {
-                let x = coordsX + dx
-                let y = coordsY + dy
-                while (inBounds(x,y)) {
-                    mappedAttacks[x][y] = 1
-                    if (map[x][y] !== '') break
-                    x += dx
-                    y += dy
-                }
-            })
+
             break
         }
 
         case 'r': {
-            const directions = [[1,0],[-1,0],[0,1],[0,-1]]
-            directions.forEach(([dx, dy]) => {
-                let x = coordsX + dx
-                let y = coordsY + dy
-                while (inBounds(x,y)) {
-                    mappedAttacks[x][y] = 1
-                    if (map[x][y] !== '') break
-                    x += dx
-                    y += dy
-                }
-            })
+
             break
         }
 
         case 'q': {
-            const directions = [
-                [1,0],[-1,0],[0,1],[0,-1],
-                [1,1],[1,-1],[-1,1],[-1,-1]
-            ]
-            directions.forEach(([dx, dy]) => {
-                let x = coordsX + dx
-                let y = coordsY + dy
-                while (inBounds(x,y)) {
-                    mappedAttacks[x][y] = 1
-                    if (map[x][y] !== '') break
-                    x += dx
-                    y += dy
-                }
-            })
             break
         }
 
         case 'k': {
-            const moves = [
-                [1,0],[-1,0],[0,1],[0,-1],
-                [1,1],[1,-1],[-1,1],[-1,-1]
-            ]
-            moves.forEach(([dx, dy]) => {
-                const x = coordsX + dx
-                const y = coordsY + dy
-                if (inBounds(x,y)) mappedAttacks[x][y] = 1
-            })
+
             break
         }
     }
