@@ -73,7 +73,7 @@ export const createFenString = (boardMap: Array<Array<string>>): string | null =
     First check if the piece selected is from the correct team, check if the destination has a piece of the same team as the moving piece,
     then check if the move is legal.
 */
-export const validateMove = (map : Array<Array<String>>, start: [number, number], destination: [number, number], team: String): boolean => {
+export const validateMove = (map : Array<Array<String>>, start: [number, number], destination: [number, number], team: string): boolean => {
     const piece = map[start[0]][start[1]]
     const destinationPiece = map[destination[0]][destination[1]]
 
@@ -86,7 +86,58 @@ export const validateMove = (map : Array<Array<String>>, start: [number, number]
      team == "black" && (destinationPiece >= 'a' && destinationPiece <= 'z')){
         return false
     }
-    return true;
+
+    const pieceType = piece.toLowerCase()
+    const distance = [ destination[0] - start[0], destination[1] - start[1]]
+    switch(pieceType){
+        case 'p':
+            {
+                const dir = team === "white" ? -1 : 1;
+                const startRow = team === "white" ? 6 : 1;
+                if((distance[0] == dir) && distance[1] == 0){
+                    if(map[destination[0]][destination[1]] != ' '){
+                        return false
+                    }
+                    return true
+                }
+                if(distance[0] == dir * 2 && distance[1] == 0){
+                    if(map[destination[0]][destination[1]] != ' ' || start[0] != startRow){
+                        return false
+                    }
+                    return true
+                }
+                if(distance[0] == dir && distance[1] == dir){
+                    if(map[destination[0]][destination[1]] == ' '){
+                        return false
+                    }
+                    return true
+                }
+                break
+            }
+        case 'b':
+            {
+                break
+            }
+        case 'n':
+            {
+                break
+            }
+        case 'r':
+            {
+                break
+            }
+        case 'q':
+            {
+                break
+            }
+        case 'k':
+            {
+                break
+            }
+    }
+
+    // Something went wrong if this is reached.
+    return false;
 }
 
 /*
