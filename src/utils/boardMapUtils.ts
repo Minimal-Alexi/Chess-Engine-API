@@ -114,11 +114,15 @@ export const validateMove = (map : Array<Array<String>>, start: [number, number]
                 }
                 break
             }
-        case 'b':
+        case 'n':
             {
+                if((Math.abs(distance[0]) == 2 && Math.abs(distance[1]) == 1) ||
+                (Math.abs(distance[0]) == 1 && Math.abs(distance[1]) == 2)){
+                    return true
+                }
                 break
             }
-        case 'n':
+        case 'b':
             {
                 break
             }
