@@ -3,8 +3,8 @@ import { pointwiseMaximum } from "./matrixManipulation";
 const inBounds = (x: number, y: number) => x >= 0 && x <= 7 && y >= 0 && y <= 7;
 const isLower = (x: string) => x >= 'a' && x <= 'z';
 const isUpper = (x: string) => x >= 'A' && x <= 'Z';
-const teamCond = (team: string,map:Array<Array<string>>, i : number, j : number) => team == "white" ? isLower(map[i][j]) : isUpper(map[i][j])
-const differentTeamCheck = (piece:string, target:string) => target != ' ' && isUpper(target) !== isUpper(piece)
+const teamCond = (team: string, map: Array<Array<string>>, i: number, j: number) => team == "white" ? isLower(map[i][j]) : isUpper(map[i][j])
+const differentTeamCheck = (piece: string, target: string) => target != ' ' && isUpper(target) !== isUpper(piece)
 
 export const createBoardMap = (fen: string): Array<Array<string>> | null => {
     const size = 8;
@@ -138,10 +138,10 @@ export const getEndangeredTilesByPiece = (
             [1, 2], [1, -2], [-1, 2], [-1, -2]]
             for (const move of moves) {
                 if (inBounds(coordsX + move[0], coordsY + move[1]) &&
-                 (
-                    differentTeamCheck(selectedPiece,map[coordsX + move[0]][coordsY + move[1]])
-                    || map[coordsX + move[0]][coordsY + move[1]] == ' '
-                 )
+                    (
+                        differentTeamCheck(selectedPiece, map[coordsX + move[0]][coordsY + move[1]])
+                        || map[coordsX + move[0]][coordsY + move[1]] == ' '
+                    )
                 ) {
                     mappedAttacks[coordsX + move[0]][coordsY + move[1]] = 1;
                 }
@@ -183,7 +183,7 @@ export const getEndangeredTilesByPiece = (
 
         case 'q': {
             const directions = [[-1, 0], [1, 0], [0, -1], [0, 1],
-                                [1, 1], [1, -1], [-1, 1], [-1, -1]]
+            [1, 1], [1, -1], [-1, 1], [-1, -1]]
             for (const dir of directions) {
                 let i = coordsX + dir[0], j = coordsY + dir[1];
                 while (inBounds(i, j) && map[i][j] == ' ') {
@@ -243,9 +243,9 @@ export const getLegalMoves = (
                     }
                 }
             }
-            if(inBounds(coordsX + dir, coordsY) && map[coordsX + dir][coordsY] == ' '){
+            if (inBounds(coordsX + dir, coordsY) && map[coordsX + dir][coordsY] == ' ') {
                 mappedLegalMoves[coordsX + dir][coordsY] = 1;
-                if((isWhite ? coordsX == 6 : coordsX == 1) && map[coordsX + dir * 2][coordsY] == ' '){
+                if ((isWhite ? coordsX == 6 : coordsX == 1) && map[coordsX + dir * 2][coordsY] == ' ') {
                     mappedLegalMoves[coordsX + dir * 2][coordsY] = 1
                 }
             }
@@ -289,7 +289,7 @@ export const isCheck = (map: Array<Array<string>>, team: string): boolean => {
 
     for (let i = 0; i <= 7; ++i) {
         for (let j = 0; j <= 7; ++j) {
-            if (teamCond(team,map,i,j)) {
+            if (teamCond(team, map, i, j)) {
                 const attackPattern = getEndangeredTilesByPiece(map, [i, j])
                 if (attackPattern[kingPosition[0]][kingPosition[1]] == 1) {
                     return true
@@ -311,7 +311,7 @@ export const isCheck = (map: Array<Array<string>>, team: string): boolean => {
     This function verifies if the appropiate teams' king is in check.
 */
 export const isCheckMate = (map: Array<Array<string>>, team: string): boolean => {
-    if(!isCheck(map,team)){
+    if (!isCheck(map, team)) {
         return false
     }
 
@@ -345,7 +345,7 @@ export const validateMove = (map: Array<Array<string>>, start: [number, number],
         return false
     }
 
-    if(isCheck(movePiece(map,start,destination),team)){
+    if (isCheck(movePiece(map, start, destination), team)) {
         return false
     }
 
@@ -354,8 +354,8 @@ export const validateMove = (map: Array<Array<string>>, start: [number, number],
     switch (pieceType) {
         case 'p':
             {
-                const pawnMoves = getLegalMoves(map,start)
-                if(pawnMoves[destination[0]][destination[1]] == 1){
+                const pawnMoves = getLegalMoves(map, start)
+                if (pawnMoves[destination[0]][destination[1]] == 1) {
                     return true
                 }
                 break
