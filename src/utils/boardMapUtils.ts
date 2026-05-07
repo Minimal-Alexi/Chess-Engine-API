@@ -93,29 +93,29 @@ export const checkAvailableAttacksForPiece = (
 ): Array<Array<number>> => {
 
     let mappedAttacks = [
-        [0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0]
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0]
     ];
     const selectedPiece = map[selectedPieceLocation[0]][selectedPieceLocation[1]];
     const selectedPieceType = selectedPiece.toLowerCase();
     const coordsX = selectedPieceLocation[0], coordsY = selectedPieceLocation[1];
     const isWhite = (selectedPiece >= 'A' && selectedPiece <= 'Z');
 
-    const inBounds = (x:number, y:number) => x >= 0 && x <= 7 && y >= 0 && y <= 7;
+    const inBounds = (x: number, y: number) => x >= 0 && x <= 7 && y >= 0 && y <= 7;
 
     switch (selectedPieceType) {
 
         case 'p': {
-            const moves = [[1,1],[1,-1]];
+            const moves = [[1, 1], [1, -1]];
             const dir = isWhite == true ? -1 : 1;
-            for(const move of moves){
-                if(inBounds(coordsX + move[0],coordsY + move[1])){
+            for (const move of moves) {
+                if (inBounds(coordsX + move[0], coordsY + move[1])) {
                     mappedAttacks[coordsX + move[0] * dir][coordsY + move[1]] = 1;
                 }
             }
@@ -123,10 +123,10 @@ export const checkAvailableAttacksForPiece = (
         }
 
         case 'n': {
-            const moves = [[2,1],[2,-1],[-2,1],[-2,-1],
-                            [1,2],[1,-2],[-1,2],[-1,-2]]
-            for(const move of moves){
-                if(inBounds(coordsX + move[0],coordsY + move[1])){
+            const moves = [[2, 1], [2, -1], [-2, 1], [-2, -1],
+            [1, 2], [1, -2], [-1, 2], [-1, -2]]
+            for (const move of moves) {
+                if (inBounds(coordsX + move[0], coordsY + move[1])) {
                     mappedAttacks[coordsX + move[0]][coordsY + move[1]] = 1;
                 }
             }
@@ -134,15 +134,15 @@ export const checkAvailableAttacksForPiece = (
         }
 
         case 'b': {
-            const directions = [[1,1],[1,-1],[-1,1],[-1,-1]]
-            for(const dir of directions){
+            const directions = [[1, 1], [1, -1], [-1, 1], [-1, -1]]
+            for (const dir of directions) {
                 let i = coordsX + dir[0], j = coordsY + dir[1];
-                while(inBounds(i,j) && map[i][j] == ' '){
+                while (inBounds(i, j) && map[i][j] == ' ') {
                     mappedAttacks[i][j] = 1;
                     i += dir[0];
                     j += dir[1];
                 }
-                if(inBounds(i,j) && map[i][j] != ' '){
+                if (inBounds(i, j) && map[i][j] != ' ') {
                     mappedAttacks[i][j] = 1;
                 }
             }
@@ -150,6 +150,18 @@ export const checkAvailableAttacksForPiece = (
         }
 
         case 'r': {
+            const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]]
+            for (const dir of directions) {
+                let i = coordsX + dir[0], j = coordsY + dir[1];
+                while (inBounds(i, j) && map[i][j] == ' ') {
+                    mappedAttacks[i][j] = 1;
+                    i += dir[0];
+                    j += dir[1];
+                }
+                if (inBounds(i, j) && map[i][j] != ' ') {
+                    mappedAttacks[i][j] = 1;
+                }
+            }
             break
         }
 
@@ -158,11 +170,11 @@ export const checkAvailableAttacksForPiece = (
         }
 
         case 'k': {
-            const moves = [[-1,-1],[-1,0],[-1,1],
-                            [0, -1], [0, 1],
-                            [1, -1], [1, 0], [1, 1]];
-            for(let move of moves){
-                if(inBounds(coordsX + move[0],coordsY + move[1])){
+            const moves = [[-1, -1], [-1, 0], [-1, 1],
+            [0, -1], [0, 1],
+            [1, -1], [1, 0], [1, 1]];
+            for (let move of moves) {
+                if (inBounds(coordsX + move[0], coordsY + move[1])) {
                     mappedAttacks[coordsX + move[0]][coordsY + move[1]] = 1;
                 }
             }
@@ -181,7 +193,7 @@ export const checkAvailableAttacksForPiece = (
     Explanation:
     This function verifies if the appropiate teams' king is in check.
 */
-export const isCheck = (map: Array<Array<string>>,team:string):boolean => {
+export const isCheck = (map: Array<Array<string>>, team: string): boolean => {
     return true
 }
 
@@ -194,7 +206,7 @@ export const isCheck = (map: Array<Array<string>>,team:string):boolean => {
     Explanation:
     This function verifies if the appropiate teams' king is in check.
 */
-export const isCheckMate = (map: Array<Array<string>>,team:string):boolean => {
+export const isCheckMate = (map: Array<Array<string>>, team: string): boolean => {
     return true
 }
 /*
@@ -324,7 +336,7 @@ export const validateMove = (map: Array<Array<String>>, start: [number, number],
                         j += sign[1]
                     }
                 }
-                if (Math.abs(distance[0]) > 0 && distance[1] == 0){
+                if (Math.abs(distance[0]) > 0 && distance[1] == 0) {
                     const sign = Math.sign(distance[0])
                     let i = start[0] + sign
                     const j = start[1]
@@ -336,7 +348,7 @@ export const validateMove = (map: Array<Array<String>>, start: [number, number],
                     }
                     return true
                 }
-                if (Math.abs(distance[1]) > 0 && distance[0] == 0){
+                if (Math.abs(distance[1]) > 0 && distance[0] == 0) {
                     const sign = Math.sign(distance[1])
                     const i = start[0]
                     let j = start[1] + sign
@@ -352,7 +364,7 @@ export const validateMove = (map: Array<Array<String>>, start: [number, number],
             }
         case 'k':
             {
-                if(Math.abs(distance[0]) > 1 || Math.abs(distance[1]) > 1){
+                if (Math.abs(distance[0]) > 1 || Math.abs(distance[1]) > 1) {
                     return false
                 }
                 break
