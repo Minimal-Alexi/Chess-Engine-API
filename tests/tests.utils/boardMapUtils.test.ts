@@ -726,6 +726,7 @@ describe("Test validateMove function", () => {
             ]
             expect(validateMove(boardMap, [4, 3], [3, 2], "white")).toBe(true)
             expect(validateMove(boardMap, [3, 2], [4, 3], "black")).toBe(true)
+            expect(validateMove(boardMap, [3, 2], [4, 1], "black")).toBe(false)
         })
         /*         it("En Passant", () => {
                     IMPORTANT: IMPOSSIBLE TO VALIDATE RIGHT NOW, AS THERE IS NO WAY TO KNOW IF A PAWN HAS JUST MOVED TWO TILES, WHICH IS NECESSARY FOR EN PASSANT.

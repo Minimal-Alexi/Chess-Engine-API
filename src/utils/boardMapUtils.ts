@@ -242,8 +242,8 @@ export const getLegalMoves = (
         for (const endangeredTile of endangeredTiles) {
             if (inBounds(coordsX + endangeredTile[0] * dir, coordsY + endangeredTile[1])) {
                 const target = map[coordsX + endangeredTile[0] * dir][coordsY + endangeredTile[1]];
-                if (target !== ' ' && isUpper(target) !== isUpper(piece)) {
-                    mappedLegalMoves[coordsX + endangeredTile[0] * dir][coordsY + endangeredTile[1]] = 1;
+                if (target == ' ') {
+                    mappedLegalMoves[coordsX + endangeredTile[0] * dir][coordsY + endangeredTile[1]] = 0;
                 }
             }
         }
