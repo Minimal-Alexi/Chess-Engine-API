@@ -287,7 +287,7 @@ export const validateMove = (map: Array<Array<string>>, start: [number, number],
         team == "black" && (destinationPiece >= 'a' && destinationPiece <= 'z')) {
         return false
     }
-    
+
     if(isCheck(movePiece(map,start,destination),team)){
         return false
     }
@@ -422,10 +422,7 @@ export const validateMove = (map: Array<Array<string>>, start: [number, number],
                 if (Math.abs(distance[0]) > 1 || Math.abs(distance[1]) > 1) {
                     return false
                 }
-                const boardMapToCheck = movePiece(map,start,destination)
-                if(isCheck(boardMapToCheck,team) == true){
-
-                }
+                return true
             }
     }
 
