@@ -258,6 +258,10 @@ export const isCheck = (map: Array<Array<string>>, team: string): boolean => {
     This function verifies if the appropiate teams' king is in check.
 */
 export const isCheckMate = (map: Array<Array<string>>, team: string): boolean => {
+    if(!isCheck(map,team)){
+        return false
+    }
+
     return true
 }
 /*
