@@ -166,6 +166,19 @@ export const checkAvailableAttacksForPiece = (
         }
 
         case 'q': {
+            const directions = [[-1, 0], [1, 0], [0, -1], [0, 1],
+                                [1, 1], [1, -1], [-1, 1], [-1, -1]]
+            for (const dir of directions) {
+                let i = coordsX + dir[0], j = coordsY + dir[1];
+                while (inBounds(i, j) && map[i][j] == ' ') {
+                    mappedAttacks[i][j] = 1;
+                    i += dir[0];
+                    j += dir[1];
+                }
+                if (inBounds(i, j) && map[i][j] != ' ') {
+                    mappedAttacks[i][j] = 1;
+                }
+            }
             break
         }
 
