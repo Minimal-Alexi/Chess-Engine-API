@@ -208,6 +208,39 @@ export const checkAvailableAttacksForPiece = (
     It finds the kings position, then it finds every single opposing piece and combines their attack maps together.
 */
 export const isCheck = (map: Array<Array<string>>, team: string): boolean => {
+    const isLower = (x: string) => x >= 'a' && x <= 'z';
+    const isUpper = (x: string) => x >= 'A' && x <= 'Z';
+
+    let kingPosition: [number, number] | undefined;
+    for (let i = 0; i <= 7; ++i) {
+        for (let j = 0; j <= 7; ++j) {
+            if (team == 'white' ? isUpper(map[i][j]) : isLower(map[i][j])
+                && map[i][j].toLowerCase() == 'k') {
+                kingPosition = [i, j]
+            }
+        }
+    }
+
+    if(!kingPosition) return false
+    let endangeredTiles =  [
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0]
+    ];
+
+    for (let i = 0; i <= 7; ++i) {
+        for (let j = 0; j <= 7; ++j) {
+            if(team === "white" ? isLower(map[i][j]) : isUpper(map[i][j])){
+
+            }
+        }
+    }
+
     return false
 }
 
