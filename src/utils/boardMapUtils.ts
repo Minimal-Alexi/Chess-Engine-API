@@ -71,7 +71,7 @@ export const createFenString = (boardMap: Array<Array<string>>): string | null =
     Explanation:
     Moves a piece from one tile to another, without checking for constraints. This is a helper function which should be called ONLY inside makeMove.
 */
-const movePiece = (map: Array<Array<String>>, start: [number, number], destination: [number, number]) => {
+const movePiece = (map: Array<Array<string>>, start: [number, number], destination: [number, number]) => {
     let newMap = map
     newMap[destination[0]][destination[1]] = map[start[0]][start[1]]
     newMap[start[0]][start[1]] = ' '
@@ -236,7 +236,7 @@ export const isCheckMate = (map: Array<Array<string>>, team: string): boolean =>
     While checking if the move is legal, first check if the king is in danger, if the king is in danger, the move must save the king; then the move itself is validated.
     Otherwise, the move is just validated.
 */
-export const validateMove = (map: Array<Array<String>>, start: [number, number], destination: [number, number], team: string): boolean => {
+export const validateMove = (map: Array<Array<string>>, start: [number, number], destination: [number, number], team: string): boolean => {
     const piece = map[start[0]][start[1]]
     const destinationPiece = map[destination[0]][destination[1]]
 
@@ -380,7 +380,10 @@ export const validateMove = (map: Array<Array<String>>, start: [number, number],
                 if (Math.abs(distance[0]) > 1 || Math.abs(distance[1]) > 1) {
                     return false
                 }
-                break
+                const boardMapToCheck = movePiece(map,start,destination)
+                if(isCheck(boardMapToCheck,team) == true){
+
+                }
             }
     }
 
