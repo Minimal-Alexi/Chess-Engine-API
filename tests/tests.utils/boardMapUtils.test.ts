@@ -1,5 +1,5 @@
 import e from "express";
-import { checkAvailableAttacksForPiece, createBoardMap, createFenString, validateMove } from "../../src/utils/boardMapUtils";
+import { checkAvailableAttacksForPiece, createBoardMap, createFenString, isCheck, validateMove } from "../../src/utils/boardMapUtils";
 
 describe("Test createBoardMap function", () => {
     it("Should create a board map from a FEN string", () => {
@@ -478,6 +478,60 @@ describe("Test checkAvailableAttacksForPiece function", () => {
             [0, 0, 0, 0, 0, 0, 0, 0]
         ]
         expect(checkAvailableAttacksForPiece(boardMap, [3, 3])).toEqual(expectedKingAttackMap)
+    })
+})
+describe("Test isCheck", () => {
+    it("Should return true if the king is in danger", () => {
+        const boardMapBlack = [
+            ['k', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', 'B', ' ', ' ', ' ', ' ', ' '],
+            ['n', ' ', ' ', ' ', ' ', ' ', ' ', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+        ]
+        expect(isCheck(boardMapBlack,"black")).toBe(true)
+        const boardMapWhite = [
+            ['K', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', 'b', ' ', ' ', ' ', ' ', ' '],
+            ['N', ' ', ' ', ' ', ' ', ' ', ' ', 'P'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+        ]
+        expect(isCheck(boardMapWhite,"white")).toBe(true)
+    })
+    it("Should return false if the king is not in danger", () => {
+        const boardMap = [
+            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+        ]
+        expect(isCheck(boardMap,"white")).toBe(false)
+        expect(isCheck(boardMap,"black")).toBe(false)
+    })
+    it("Should return false if there is no king. NOTE: TESTING ONLY", () => {
+        const boardMap = [
+            ['r', 'n', 'b', 'q', ' ', 'b', 'n', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'N', 'B', 'Q', ' ', 'B', 'N', 'R']
+        ]
+        expect(isCheck(boardMap,"white")).toBe(false)
+        expect(isCheck(boardMap,"black")).toBe(false)
     })
 })
 
