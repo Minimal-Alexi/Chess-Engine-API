@@ -122,7 +122,7 @@ export const getEndangeredTilesByPiece = (
             const moves = [[1, 1], [1, -1]];
             const dir = isWhite == true ? -1 : 1;
             for (const move of moves) {
-                if (inBounds(coordsX + move[0], coordsY + move[1])) {
+                if (inBounds(coordsX + move[0] * dir, coordsY + move[1])) {
                     mappedAttacks[coordsX + move[0] * dir][coordsY + move[1]] = 1;
                 }
             }
