@@ -149,7 +149,14 @@ export const checkAvailableAttacksForPiece = (
         }
 
         case 'k': {
-
+            const moves = [[-1,-1],[-1,0],[-1,1],
+                            [0, -1], [0, 1],
+                            [1, -1], [1, 0], [1, 1]]
+            for(let move of moves){
+                if(inBounds(coordsX + move[0],coordsY + move[1])){
+                    mappedAttacks[coordsX + move[0]][coordsY + move[1]] = 1
+                }
+            }
             break
         }
     }
