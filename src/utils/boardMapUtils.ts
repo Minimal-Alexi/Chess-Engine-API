@@ -73,10 +73,15 @@ export const createFenString = (boardMap: Array<Array<string>>): string | null =
     Explanation:
     Moves a piece from one tile to another, without checking for constraints. This is a helper function which should be called ONLY inside makeMove.
 */
-const movePiece = (map: Array<Array<string>>, start: [number, number], destination: [number, number]) => {
-    let newMap = map
-    newMap[destination[0]][destination[1]] = map[start[0]][start[1]]
+const movePiece = (
+    map: Array<Array<string>>, start: [number, number], destination: [number, number]) => {
+    const newMap = map.map(row => [...row])
+
+    newMap[destination[0]][destination[1]] =
+        newMap[start[0]][start[1]]
+
     newMap[start[0]][start[1]] = ' '
+
     return newMap
 }
 
@@ -280,6 +285,10 @@ export const validateMove = (map: Array<Array<string>>, start: [number, number],
 
     if ((team == "white" && (destinationPiece >= 'A' && destinationPiece <= 'Z')) ||
         team == "black" && (destinationPiece >= 'a' && destinationPiece <= 'z')) {
+        return false
+    }
+    
+    if(isCheck(movePiece(map,start,destination),team)){
         return false
     }
 
