@@ -1,4 +1,3 @@
-import e from "express";
 import { checkAvailableAttacksForPiece, createBoardMap, createFenString, isCheck, validateMove } from "../../src/utils/boardMapUtils";
 
 describe("Test createBoardMap function", () => {
