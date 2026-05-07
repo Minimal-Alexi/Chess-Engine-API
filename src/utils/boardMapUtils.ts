@@ -158,7 +158,7 @@ export const getEndangeredTilesByPiece = (
                     i += dir[0];
                     j += dir[1];
                 }
-                if (inBounds(i, j) && map[i][j] != ' ') {
+                if (inBounds(i, j) && differentTeamCheck(selectedPiece, map[i][j])) {
                     mappedAttacks[i][j] = 1;
                 }
             }
@@ -174,7 +174,7 @@ export const getEndangeredTilesByPiece = (
                     i += dir[0];
                     j += dir[1];
                 }
-                if (inBounds(i, j) && map[i][j] != ' ') {
+                if (inBounds(i, j) && differentTeamCheck(selectedPiece, map[i][j])) {
                     mappedAttacks[i][j] = 1;
                 }
             }
@@ -191,7 +191,7 @@ export const getEndangeredTilesByPiece = (
                     i += dir[0];
                     j += dir[1];
                 }
-                if (inBounds(i, j) && map[i][j] != ' ') {
+                if (inBounds(i, j) && differentTeamCheck(selectedPiece, map[i][j])) {
                     mappedAttacks[i][j] = 1;
                 }
             }
@@ -203,7 +203,12 @@ export const getEndangeredTilesByPiece = (
             [0, -1], [0, 1],
             [1, -1], [1, 0], [1, 1]];
             for (let move of moves) {
-                if (inBounds(coordsX + move[0], coordsY + move[1])) {
+                if (inBounds(coordsX + move[0], coordsY + move[1]) &&
+                    (
+                        map[coordsX + move[0]][coordsY + move[1]] == ' ' ||
+                        differentTeamCheck(selectedPiece, map[coordsX + move[0]][coordsY + move[1]])
+                    )
+                ) {
                     mappedAttacks[coordsX + move[0]][coordsY + move[1]] = 1;
                 }
             }
