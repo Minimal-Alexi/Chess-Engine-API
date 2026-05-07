@@ -216,27 +216,30 @@ export const getEndangeredTilesByPiece = (
     Explanation:
     This function combines the attack maps alongside with the neutral, non-attack moves for special pieces.
 */
-const getLegalMoves = (
+export const getLegalMoves = (
     map: Array<Array<string>>,
     selectedPieceLocation: [number, number]
-):Array<Array<number>> => {
-    let mappedLegalMoves = [
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0]
-    ];
-
+): Array<Array<number>> => {
     const piece = map[selectedPieceLocation[0]][selectedPieceLocation[1]]
     const pieceType = piece.toLowerCase()
+    const [coordsX, coordsY] = selectedPieceLocation
+    let mappedLegalMoves = getEndangeredTilesByPiece(map, selectedPieceLocation)
     switch (pieceType) {
-        case 'p':{}
+        case 'p': {
+            const isWhite = (piece >= 'A' && piece <= 'Z');
+            const endangeredTiles = [[1, 1], [1, -1]];
+            const dir = isWhite == true ? -1 : 1;
+            for (const endangeredTile of endangeredTiles) {
+                if (inBounds(coordsX + endangeredTile[0] * dir, coordsY + endangeredTile[1])) {
+                    const target = map[coordsX + endangeredTile[0]][coordsY + endangeredTile[1]]
+                    if (target !== ' ' && isUpper(target) !== isUpper(piece)) {
+                        mappedLegalMoves[coordsX + endangeredTile[0]][coordsY + endangeredTile[1]] = 1;
+                    }
+                }
+            }
+            break
+        }
     }
-    
 
     return mappedLegalMoves
 }
