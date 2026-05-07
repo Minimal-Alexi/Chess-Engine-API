@@ -90,11 +90,11 @@ const movePiece = (
     Creator: Minimal
     Variables:
         * map: A board map
-        * pieceLocation: The coordinates of the piece that can be moved.
+        * selectedPieceLocation: The coordinates of the piece that can be moved.
     Explanation:
     This function checks the tiles that are endangered by the selected piece.
 */
-export const checkEndangeredTilesByPiece = (
+export const getEndangeredTilesByPiece = (
     map: Array<Array<string>>,
     selectedPieceLocation: [number, number]
 ): Array<Array<number>> => {
@@ -203,12 +203,40 @@ export const checkEndangeredTilesByPiece = (
     }
     return mappedAttacks
 }
-// const checkAvailableMovesForPiece = (
-//     map: Array<Array<string>>,
-//     selectedPieceLocation: [number, number]
-// ) => {
-//     let 
-// }
+
+/*
+    Name: checkLegalMoves
+    Creator: Minimal
+    Variables:
+        * map: A board map
+        * selectedPieceLocation: The coordinates of the piece that can be moved.
+    Explanation:
+    This function combines the attack maps alongside with the neutral, non-attack moves for special pieces.
+*/
+const getLegalMoves = (
+    map: Array<Array<string>>,
+    selectedPieceLocation: [number, number]
+):Array<Array<number>> => {
+    let mappedLegalMoves = [
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0]
+    ];
+
+    const piece = map[selectedPieceLocation[0]][selectedPieceLocation[1]]
+    const pieceType = piece.toLowerCase()
+    switch (pieceType) {
+        case 'p':{}
+    }
+    
+
+    return mappedLegalMoves
+}
 
 
 /*
@@ -244,7 +272,7 @@ export const isCheck = (map: Array<Array<string>>, team: string): boolean => {
     for (let i = 0; i <= 7; ++i) {
         for (let j = 0; j <= 7; ++j) {
             if (team === "white" ? isLower(map[i][j]) : isUpper(map[i][j])) {
-                const attackPattern = checkEndangeredTilesByPiece(map, [i, j])
+                const attackPattern = getEndangeredTilesByPiece(map, [i, j])
                 if (attackPattern[kingPosition[0]][kingPosition[1]] == 1) {
                     return true
                 }
