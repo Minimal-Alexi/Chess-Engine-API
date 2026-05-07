@@ -1,3 +1,5 @@
+import { pointwiseMaximum } from "./matrixManipulation";
+
 export const createBoardMap = (fen: string): Array<Array<string>> | null => {
     const size = 8;
     const boardMap: Array<Array<string>> = [];
@@ -214,29 +216,26 @@ export const isCheck = (map: Array<Array<string>>, team: string): boolean => {
     let kingPosition: [number, number] | undefined;
     for (let i = 0; i <= 7; ++i) {
         for (let j = 0; j <= 7; ++j) {
-            if (team == 'white' ? isUpper(map[i][j]) : isLower(map[i][j])
-                && map[i][j].toLowerCase() == 'k') {
+            if (
+                (team == 'white'
+                    ? isUpper(map[i][j])
+                    : isLower(map[i][j]))
+                && map[i][j].toLowerCase() == 'k'
+            ) {
                 kingPosition = [i, j]
             }
         }
     }
 
-    if(!kingPosition) return false
-    let endangeredTiles =  [
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0]
-    ];
+    if (!kingPosition) return false
 
     for (let i = 0; i <= 7; ++i) {
         for (let j = 0; j <= 7; ++j) {
-            if(team === "white" ? isLower(map[i][j]) : isUpper(map[i][j])){
-
+            if (team === "white" ? isLower(map[i][j]) : isUpper(map[i][j])) {
+                const attackPattern = checkAvailableAttacksForPiece(map, [i, j])
+                if (attackPattern[kingPosition[0]][kingPosition[1]] == 1) {
+                    return true
+                }
             }
         }
     }
