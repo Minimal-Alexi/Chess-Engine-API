@@ -1,5 +1,10 @@
 import { pointwiseMaximum } from "./matrixManipulation";
 
+const inBounds = (x: number, y: number) => x >= 0 && x <= 7 && y >= 0 && y <= 7;
+const isLower = (x: string) => x >= 'a' && x <= 'z';
+const isUpper = (x: string) => x >= 'A' && x <= 'Z';
+const teamCond = (team: string,map:Array<Array<string>>, i : number, j : number) => team == "white" ? isLower(map[i][j]) : isUpper(map[i][j])
+
 export const createBoardMap = (fen: string): Array<Array<string>> | null => {
     const size = 8;
     const boardMap: Array<Array<string>> = [];
@@ -113,8 +118,6 @@ export const getEndangeredTilesByPiece = (
     const selectedPieceType = selectedPiece.toLowerCase();
     const coordsX = selectedPieceLocation[0], coordsY = selectedPieceLocation[1];
     const isWhite = (selectedPiece >= 'A' && selectedPiece <= 'Z');
-
-    const inBounds = (x: number, y: number) => x >= 0 && x <= 7 && y >= 0 && y <= 7;
 
     switch (selectedPieceType) {
 
@@ -271,7 +274,7 @@ export const isCheck = (map: Array<Array<string>>, team: string): boolean => {
 
     for (let i = 0; i <= 7; ++i) {
         for (let j = 0; j <= 7; ++j) {
-            if (team === "white" ? isLower(map[i][j]) : isUpper(map[i][j])) {
+            if (teamCond(team,map,i,j)) {
                 const attackPattern = getEndangeredTilesByPiece(map, [i, j])
                 if (attackPattern[kingPosition[0]][kingPosition[1]] == 1) {
                     return true
