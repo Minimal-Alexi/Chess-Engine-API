@@ -4,6 +4,7 @@ const inBounds = (x: number, y: number) => x >= 0 && x <= 7 && y >= 0 && y <= 7;
 const isLower = (x: string) => x >= 'a' && x <= 'z';
 const isUpper = (x: string) => x >= 'A' && x <= 'Z';
 const teamCond = (team: string,map:Array<Array<string>>, i : number, j : number) => team == "white" ? isLower(map[i][j]) : isUpper(map[i][j])
+const differentTeamCheck = (piece:string, target:string) => target != ' ' && isUpper(target) !== isUpper(piece)
 
 export const createBoardMap = (fen: string): Array<Array<string>> | null => {
     const size = 8;
@@ -136,7 +137,12 @@ export const getEndangeredTilesByPiece = (
             const moves = [[2, 1], [2, -1], [-2, 1], [-2, -1],
             [1, 2], [1, -2], [-1, 2], [-1, -2]]
             for (const move of moves) {
-                if (inBounds(coordsX + move[0], coordsY + move[1])) {
+                if (inBounds(coordsX + move[0], coordsY + move[1]) &&
+                 (
+                    differentTeamCheck(selectedPiece,map[coordsX + move[0]][coordsY + move[1]])
+                    || map[coordsX + move[0]][coordsY + move[1]] == ' '
+                 )
+                ) {
                     mappedAttacks[coordsX + move[0]][coordsY + move[1]] = 1;
                 }
             }
