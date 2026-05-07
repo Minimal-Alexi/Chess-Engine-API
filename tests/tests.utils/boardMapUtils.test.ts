@@ -581,6 +581,19 @@ describe("Test validateMove function", () => {
         expect(validateMove(boardMap, [3, 0], [1, 1], "black")).toBe(true)
         expect(validateMove(boardMap, [3, 0], [2, 2], "black")).toBe(true)
     })
+    it("Should check if the move endangers the king into a checkmate.", () => {
+        const boardMap = [
+            ['k', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', 'p', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', 'B', ' ', ' ', ' ', ' ', ' '],
+            ['n', ' ', ' ', ' ', ' ', ' ', ' ', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+        ]
+        expect(validateMove(boardMap,[1,1],[2,1],"black")).toBe(false)
+    })
 
     describe("Test a pawn being able to move", () => {
         it("One tile away.", () => {
