@@ -1,4 +1,4 @@
-import { checkAvailableAttacksForPiece, createBoardMap, createFenString, isCheck, isCheckMate, validateMove } from "../../src/utils/boardMapUtils";
+import { checkEndangeredTilesByPiece, createBoardMap, createFenString, isCheck, isCheckMate, validateMove } from "../../src/utils/boardMapUtils";
 
 describe("Test createBoardMap function", () => {
     it("Should create a board map from a FEN string", () => {
@@ -239,7 +239,7 @@ describe("Test createFenString and createBoardMap compitability", () => {
     })
 })
 
-describe("Test checkAvailableAttacksForPiece function", () => {
+describe("Test checkEndangeredTilesByPiece function", () => {
     it("Should create a pawns' attack map.", () => {
         // Coords: [4, 2] (white pawn)
         // Coords: [3, 2] (black pawn)
@@ -273,8 +273,8 @@ describe("Test checkAvailableAttacksForPiece function", () => {
             [0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0]
         ]
-        expect(checkAvailableAttacksForPiece(boardMap, [4, 2])).toEqual(expectedPawnAttackMapWhite)
-        expect(checkAvailableAttacksForPiece(boardMap, [3, 2])).toEqual(expectedPawnAttackMapBlack)
+        expect(checkEndangeredTilesByPiece(boardMap, [4, 2])).toEqual(expectedPawnAttackMapWhite)
+        expect(checkEndangeredTilesByPiece(boardMap, [3, 2])).toEqual(expectedPawnAttackMapBlack)
     })
     it("Should create a knights' attack map.", () => {
         // Coords: [3, 3] (black knight)
@@ -298,7 +298,7 @@ describe("Test checkAvailableAttacksForPiece function", () => {
             [0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0]
         ]
-        expect(checkAvailableAttacksForPiece(boardMap, [3, 3])).toEqual(expectedKnightAttackMap)
+        expect(checkEndangeredTilesByPiece(boardMap, [3, 3])).toEqual(expectedKnightAttackMap)
     })
     describe("Should create a bishops' attack map", () => {
         it("Without blocking pieces.", () => {
@@ -323,7 +323,7 @@ describe("Test checkAvailableAttacksForPiece function", () => {
                 [1, 0, 0, 0, 0, 0, 1, 0],
                 [0, 0, 0, 0, 0, 0, 0, 1]
             ]
-            expect(checkAvailableAttacksForPiece(boardMap, [3, 3])).toEqual(expectedBishopAttackMap)
+            expect(checkEndangeredTilesByPiece(boardMap, [3, 3])).toEqual(expectedBishopAttackMap)
         })
         it("With blocking pieces.", () => {
             // Coords: [3, 3] (black bishop)
@@ -348,7 +348,7 @@ describe("Test checkAvailableAttacksForPiece function", () => {
                 [1, 0, 0, 0, 0, 0, 1, 0],
                 [0, 0, 0, 0, 0, 0, 0, 1]
             ]
-            expect(checkAvailableAttacksForPiece(boardMap, [3, 3])).toEqual(expectedBishopAttackMap)
+            expect(checkEndangeredTilesByPiece(boardMap, [3, 3])).toEqual(expectedBishopAttackMap)
         })
     })
     describe("Should create a rooks' attack map.", () => {
@@ -374,7 +374,7 @@ describe("Test checkAvailableAttacksForPiece function", () => {
                 [0, 0, 0, 1, 0, 0, 0, 0],
                 [0, 0, 0, 1, 0, 0, 0, 0]
             ]
-            expect(checkAvailableAttacksForPiece(boardMap, [3, 3])).toEqual(expectedRookAttackMap)
+            expect(checkEndangeredTilesByPiece(boardMap, [3, 3])).toEqual(expectedRookAttackMap)
         })
         it("With blocking pieces.", () => {
             // Coords: [3, 3] (black rook)
@@ -399,7 +399,7 @@ describe("Test checkAvailableAttacksForPiece function", () => {
                 [0, 0, 0, 1, 0, 0, 0, 0],
                 [0, 0, 0, 1, 0, 0, 0, 0]
             ]
-            expect(checkAvailableAttacksForPiece(boardMap, [3, 3])).toEqual(expectedRookAttackMap)
+            expect(checkEndangeredTilesByPiece(boardMap, [3, 3])).toEqual(expectedRookAttackMap)
         })
     })
     describe("Should create a queens' attack map.", () => {
@@ -425,7 +425,7 @@ describe("Test checkAvailableAttacksForPiece function", () => {
                 [1, 0, 0, 1, 0, 0, 1, 0],
                 [0, 0, 0, 1, 0, 0, 0, 1]
             ]
-            expect(checkAvailableAttacksForPiece(boardMap, [3, 3])).toEqual(expectedQueenAttackMap)
+            expect(checkEndangeredTilesByPiece(boardMap, [3, 3])).toEqual(expectedQueenAttackMap)
         })
         it("With blocking pieces.", () => {
             // Coords: [3, 3] (black queen)
@@ -451,7 +451,7 @@ describe("Test checkAvailableAttacksForPiece function", () => {
                 [1, 0, 0, 1, 0, 0, 1, 0],
                 [0, 0, 0, 1, 0, 0, 0, 1]
             ]
-            expect(checkAvailableAttacksForPiece(boardMap, [3, 3])).toEqual(expectedQueenAttackMap)
+            expect(checkEndangeredTilesByPiece(boardMap, [3, 3])).toEqual(expectedQueenAttackMap)
         })
     })
     it("Should create a kings' attack map", () => {
@@ -476,7 +476,7 @@ describe("Test checkAvailableAttacksForPiece function", () => {
             [0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0]
         ]
-        expect(checkAvailableAttacksForPiece(boardMap, [3, 3])).toEqual(expectedKingAttackMap)
+        expect(checkEndangeredTilesByPiece(boardMap, [3, 3])).toEqual(expectedKingAttackMap)
     })
 })
 describe("Test isCheck", () => {

@@ -86,7 +86,7 @@ const movePiece = (
 }
 
 /*
-    Name: checkAvailableAttacksForPiece
+    Name: checkEndangeredTilesByPiece
     Creator: Minimal
     Variables:
         * map: A board map
@@ -94,7 +94,7 @@ const movePiece = (
     Explanation:
     This function checks the tiles that are endangered by the selected piece.
 */
-export const checkAvailableAttacksForPiece = (
+export const checkEndangeredTilesByPiece = (
     map: Array<Array<string>>,
     selectedPieceLocation: [number, number]
 ): Array<Array<number>> => {
@@ -203,6 +203,13 @@ export const checkAvailableAttacksForPiece = (
     }
     return mappedAttacks
 }
+// const checkAvailableMovesForPiece = (
+//     map: Array<Array<string>>,
+//     selectedPieceLocation: [number, number]
+// ) => {
+//     let 
+// }
+
 
 /*
     Name: isCheck
@@ -237,7 +244,7 @@ export const isCheck = (map: Array<Array<string>>, team: string): boolean => {
     for (let i = 0; i <= 7; ++i) {
         for (let j = 0; j <= 7; ++j) {
             if (team === "white" ? isLower(map[i][j]) : isUpper(map[i][j])) {
-                const attackPattern = checkAvailableAttacksForPiece(map, [i, j])
+                const attackPattern = checkEndangeredTilesByPiece(map, [i, j])
                 if (attackPattern[kingPosition[0]][kingPosition[1]] == 1) {
                     return true
                 }
