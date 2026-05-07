@@ -1,4 +1,4 @@
-import { checkAvailableAttacksForPiece, createBoardMap, createFenString, isCheck, validateMove } from "../../src/utils/boardMapUtils";
+import { checkAvailableAttacksForPiece, createBoardMap, createFenString, isCheck, isCheckMate, validateMove } from "../../src/utils/boardMapUtils";
 
 describe("Test createBoardMap function", () => {
     it("Should create a board map from a FEN string", () => {
@@ -533,7 +533,59 @@ describe("Test isCheck", () => {
         expect(isCheck(boardMap,"black")).toBe(false)
     })
 })
+describe("Test isCheckMate", () => {
+    it("Should return true if it's a mate.", () => {
+        const foolMate = [
+            ['r', 'n', 'b', ' ', 'k', 'b', 'n', 'r'],
+            ['p', 'p', 'p', 'p', ' ', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', 'p', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', 'P', 'q'],
+            [' ', ' ', ' ', ' ', ' ', 'P', ' ', ' '],
+            ['P', 'P', 'P', 'P', 'P', ' ', ' ', 'P'],
+            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+        ];
+        expect(isCheckMate(foolMate,"white")).toBe(true)
+        const shepherdMate = [
+            ['r', ' ', 'b', 'q', 'k', 'b', 'n', 'r'],
+            ['p', 'p', 'p', ' ', 'Q', 'p', 'p', 'p'],
+            [' ', ' ', 'n', 'p', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', 'p', ' ', ' ', ' '],
+            [' ', ' ', 'B', ' ', 'P', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', 'P', 'P', 'P', ' ', 'P', 'P', 'P'],
+            ['R', 'N', 'B', ' ', 'K', ' ', 'N', 'R']
+        ]
+        expect(isCheckMate(shepherdMate,"black")).toBe(true)
+    })
+    it("Should return false if it's not a mate.", () => {
+        // Check, but not checkmate!
+        const boardMapCheck = [
+            ['K', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', 'b', ' ', ' ', ' ', ' ', ' '],
+            ['N', ' ', ' ', ' ', ' ', ' ', ' ', 'P'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+        ]
+        expect(isCheckMate(boardMapCheck,"white")).toBe(false)
 
+        const boardMap = [
+            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+        ]
+        expect(isCheckMate(boardMap,"white")).toBe(false)
+        expect(isCheckMate(boardMap,"black")).toBe(false)
+    })
+})
 describe("Test validateMove function", () => {
     it("Ensure teams are checked, so that players can't move illegal pieces.", () => {
         const boardMap = [
