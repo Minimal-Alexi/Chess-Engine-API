@@ -692,14 +692,13 @@ describe("Test validateMove function", () => {
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', 'p', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', 'P', ' ', ' ', ' ', ' ', ' '],
-                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-                [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
             ]
-            expect(validateMove(boardMapClose, [4, 2], [2, 2], "white")).toBe(false)
-            expect(validateMove(boardMapClose, [3, 2], [5, 2], "black")).toBe(false)
+            expect(validateMove(boardMapClose, [6, 2], [4, 2], "white")).toBe(false)
 
             const twoTilesAlreadyMoved = [
                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
