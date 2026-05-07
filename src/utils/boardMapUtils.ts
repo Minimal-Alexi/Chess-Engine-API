@@ -88,7 +88,7 @@ const movePiece = (map: Array<Array<string>>, start: [number, number], destinati
     This function checks the pieces that can be attacked by the selected piece.
 */
 export const checkAvailableAttacksForPiece = (
-    map: Array<Array<String>>,
+    map: Array<Array<string>>,
     selectedPieceLocation: [number, number]
 ): Array<Array<number>> => {
 
@@ -404,6 +404,6 @@ export const validateMove = (map: Array<Array<string>>, start: [number, number],
     Code checks if the right team tried to move a chess piece, check if the destination and start are within bounds, then validates the move,
     changes the fen string.
 */
-export const makeMove = (fen: String, start: [number, number], destination: [number, number], team: String): String => {
+export const makeMove = (fen: string, start: [number, number], destination: [number, number], team: string): string => {
     return "";
 }
