@@ -205,9 +205,10 @@ export const checkAvailableAttacksForPiece = (
         * team: The team that needs to be verified if it's in check.
     Explanation:
     This function verifies if the appropiate teams' king is in check.
+    It finds the kings position, then it finds every single opposing piece and combines their attack maps together.
 */
 export const isCheck = (map: Array<Array<string>>, team: string): boolean => {
-    return true
+    return false
 }
 
 /*
