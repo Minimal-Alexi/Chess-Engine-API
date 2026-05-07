@@ -219,13 +219,13 @@ export const getEndangeredTilesByPiece = (
 }
 
 /*
-    Name: checkLegalMoves
+    Name: getLegalMoves
     Creator: Minimal
     Variables:
         * map: A board map
         * selectedPieceLocation: The coordinates of the piece that can be moved.
     Explanation:
-    This function combines the attack maps alongside with the neutral, non-attack moves for special pieces.
+    This function uses endangeredTilesMap with some extra logic to ensure the only legal moves are visible.
 */
 export const getLegalMoves = (
     map: Array<Array<string>>,
@@ -235,29 +235,25 @@ export const getLegalMoves = (
     const pieceType = piece.toLowerCase()
     const [coordsX, coordsY] = selectedPieceLocation
     let mappedLegalMoves = getEndangeredTilesByPiece(map, selectedPieceLocation)
-    switch (pieceType) {
-        case 'p': {
-            const isWhite = (piece >= 'A' && piece <= 'Z');
-            const endangeredTiles = [[1, 1], [1, -1]];
-            const dir = isWhite == true ? -1 : 1;
-            for (const endangeredTile of endangeredTiles) {
-                if (inBounds(coordsX + endangeredTile[0] * dir, coordsY + endangeredTile[1])) {
-                    const target = map[coordsX + endangeredTile[0] * dir][coordsY + endangeredTile[1]];
-                    if (target !== ' ' && isUpper(target) !== isUpper(piece)) {
-                        mappedLegalMoves[coordsX + endangeredTile[0] * dir][coordsY + endangeredTile[1]] = 1;
-                    }
+    if (pieceType == 'p') {
+        const isWhite = (piece >= 'A' && piece <= 'Z');
+        const endangeredTiles = [[1, 1], [1, -1]];
+        const dir = isWhite == true ? -1 : 1;
+        for (const endangeredTile of endangeredTiles) {
+            if (inBounds(coordsX + endangeredTile[0] * dir, coordsY + endangeredTile[1])) {
+                const target = map[coordsX + endangeredTile[0] * dir][coordsY + endangeredTile[1]];
+                if (target !== ' ' && isUpper(target) !== isUpper(piece)) {
+                    mappedLegalMoves[coordsX + endangeredTile[0] * dir][coordsY + endangeredTile[1]] = 1;
                 }
             }
-            if (inBounds(coordsX + dir, coordsY) && map[coordsX + dir][coordsY] == ' ') {
-                mappedLegalMoves[coordsX + dir][coordsY] = 1;
-                if ((isWhite ? coordsX == 6 : coordsX == 1) && map[coordsX + dir * 2][coordsY] == ' ') {
-                    mappedLegalMoves[coordsX + dir * 2][coordsY] = 1
-                }
+        }
+        if (inBounds(coordsX + dir, coordsY) && map[coordsX + dir][coordsY] == ' ') {
+            mappedLegalMoves[coordsX + dir][coordsY] = 1;
+            if ((isWhite ? coordsX == 6 : coordsX == 1) && map[coordsX + dir * 2][coordsY] == ' ') {
+                mappedLegalMoves[coordsX + dir * 2][coordsY] = 1
             }
-            break
         }
     }
-
     return mappedLegalMoves
 }
 
@@ -333,8 +329,8 @@ export const isCheckMate = (map: Array<Array<string>>, team: string): boolean =>
     Explanation:
     First check if the piece selected is from the correct team, check if the destination has a piece of the same team as the moving piece,
     then check if the move is legal.
-    While checking if the move is legal, first check if the king is in danger, if the king is in danger, the move must save the king; then the move itself is validated.
-    Otherwise, the move is just validated.
+    While checking if the move is legal, first check if the king is in danger, if the king is in danger, the move must save the king.
+    Lastly, the move itself is validated.
 */
 export const validateMove = (map: Array<Array<string>>, start: [number, number], destination: [number, number], team: string): boolean => {
     const piece = map[start[0]][start[1]]
@@ -354,122 +350,9 @@ export const validateMove = (map: Array<Array<string>>, start: [number, number],
         return false
     }
 
-    const pieceType = piece.toLowerCase()
-    const distance = [destination[0] - start[0], destination[1] - start[1]]
-    switch (pieceType) {
-        case 'p':
-            {
-                const pawnMoves = getLegalMoves(map, start)
-                if (pawnMoves[destination[0]][destination[1]] == 1) {
-                    return true
-                }
-                break
-            }
-        case 'n':
-            {
-                if ((Math.abs(distance[0]) == 2 && Math.abs(distance[1]) == 1) ||
-                    (Math.abs(distance[0]) == 1 && Math.abs(distance[1]) == 2)) {
-                    return true
-                }
-                break
-            }
-        case 'b':
-            {
-                if (Math.abs(distance[0]) != Math.abs(distance[1])) {
-                    return false
-                }
-                const sign = [Math.sign(distance[0]), Math.sign(distance[1])]
-                let i = start[0] + sign[0], j = start[1] + sign[1];
-                while (i >= 0 && i <= 7 && j >= 0 && j <= 7) {
-                    if (i == destination[0] && j == destination[1]) {
-                        return true
-                    }
-                    if (map[i][j] != ' ') {
-                        return false
-                    }
-                    i += sign[0]
-                    j += sign[1]
-                }
-                break
-            }
-        case 'r':
-            {
-                if (Math.abs(distance[0]) > 0 && Math.abs(distance[1]) > 0) {
-                    return false
-                }
-                if (Math.abs(distance[0]) > 0) {
-                    const sign = Math.sign(distance[0])
-                    let i = start[0] + sign
-                    const j = start[1]
-                    while (i != destination[0]) {
-                        if (map[i][j] != ' ') {
-                            return false
-                        }
-                        i += sign
-                    }
-                }
-                else {
-                    const sign = Math.sign(distance[1])
-                    const i = start[0]
-                    let j = start[1] + sign
-                    while (j != destination[1]) {
-                        if (map[i][j] != ' ') {
-                            return false
-                        }
-                        j += sign
-                    }
-                }
-                return true
-            }
-        case 'q':
-            {
-                if (Math.abs(distance[0]) == Math.abs(distance[1])) {
-                    const sign = [Math.sign(distance[0]), Math.sign(distance[1])]
-                    let i = start[0] + sign[0], j = start[1] + sign[1];
-                    while (i >= 0 && i <= 7 && j >= 0 && j <= 7) {
-                        if (i == destination[0] && j == destination[1]) {
-                            return true
-                        }
-                        if (map[i][j] != ' ') {
-                            return false
-                        }
-                        i += sign[0]
-                        j += sign[1]
-                    }
-                }
-                if (Math.abs(distance[0]) > 0 && distance[1] == 0) {
-                    const sign = Math.sign(distance[0])
-                    let i = start[0] + sign
-                    const j = start[1]
-                    while (i != destination[0]) {
-                        if (map[i][j] != ' ') {
-                            return false
-                        }
-                        i += sign
-                    }
-                    return true
-                }
-                if (Math.abs(distance[1]) > 0 && distance[0] == 0) {
-                    const sign = Math.sign(distance[1])
-                    const i = start[0]
-                    let j = start[1] + sign
-                    while (j != destination[1]) {
-                        if (map[i][j] != ' ') {
-                            return false
-                        }
-                        j += sign
-                    }
-                    return true
-                }
-                break
-            }
-        case 'k':
-            {
-                if (Math.abs(distance[0]) > 1 || Math.abs(distance[1]) > 1) {
-                    return false
-                }
-                return true
-            }
+    const pieceMoves = getLegalMoves(map,start)
+    if(pieceMoves[destination[0]][destination[1]] == 1){
+        return true
     }
 
     // Something went wrong if this is reached.
