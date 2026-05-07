@@ -91,6 +91,9 @@ const movePiece = (
     return newMap
 }
 
+// TODO: Create getEndangeredTilesByPieceArray and getLegalMovesArray function
+
+
 /*
     Name: checkEndangeredTilesByPiece
     Creator: Minimal
@@ -269,8 +272,6 @@ export const getLegalMoves = (
     It finds the kings position, then it finds every single opposing piece and combines their attack maps together.
 */
 export const isCheck = (map: Array<Array<string>>, team: string): boolean => {
-    const isLower = (x: string) => x >= 'a' && x <= 'z';
-    const isUpper = (x: string) => x >= 'A' && x <= 'Z';
 
     let kingPosition: [number, number] | undefined;
     for (let i = 0; i <= 7; ++i) {
@@ -314,6 +315,70 @@ export const isCheck = (map: Array<Array<string>>, team: string): boolean => {
 export const isCheckMate = (map: Array<Array<string>>, team: string): boolean => {
     if (!isCheck(map, team)) {
         return false
+    }
+    
+    let kingPosition: [number, number] | undefined;
+    for (let i = 0; i <= 7; ++i) {
+        for (let j = 0; j <= 7; ++j) {
+            if (
+                (team == 'white'
+                    ? isUpper(map[i][j])
+                    : isLower(map[i][j]))
+                && map[i][j].toLowerCase() == 'k'
+            ) {
+                kingPosition = [i, j];
+            }
+        }
+    }
+    
+    if(!kingPosition) return false;
+
+    const checkingPieces : Array<[number,number]> = []
+    for (let i = 0; i <= 7; ++i) {
+        for (let j = 0; j <= 7; ++j) {
+            const tile = map[i][j];
+            if(tile != ' ' && (isUpper(tile) != isUpper(map[kingPosition[0]][kingPosition[1]]))){
+                const endangeredTiles = getEndangeredTilesByPiece(map,[i,j])
+                if(endangeredTiles[kingPosition[0]][kingPosition[1]] == 1){
+                    checkingPieces.push([i,j]);
+                }
+            }
+        }
+    }
+
+    // TODO: This should be done in a more efficient manner, but the last thing I want to work on is the fucking chess logic.
+
+    if(checkingPieces.length >= 2){
+        const kingsEscapeRoutes = getLegalMoves(map,kingPosition);
+        for (let i = 0; i <= 7; ++i) {
+            for (let j = 0; j <= 7; ++j) {
+                if(kingsEscapeRoutes[i][j] == 1
+                    && validateMove(map,kingPosition,[i,j],team) == true
+                ){
+                    return false;
+                }
+            }
+        }
+        return true
+    }
+
+    for (let i = 0; i <= 7; ++i) {
+        for (let j = 0; j <= 7; ++j) {
+            const tile = map[i][j]
+            if(tile != ' ' && (isUpper(tile) == isUpper(map[kingPosition[0]][kingPosition[1]]))){
+                const pieceLegalMoves = getLegalMoves(map,[i,j]);
+                for(let ii = 0; ii <= 7; ++ii){
+                    for(let jj = 0; jj <= 7; ++jj){
+                        if(pieceLegalMoves[ii][jj] == 1){
+                            if(validateMove(map,[i,j],[ii,jj],team)){
+                                return false
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
     }
 
     return true
