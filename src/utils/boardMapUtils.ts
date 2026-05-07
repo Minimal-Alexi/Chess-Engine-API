@@ -92,7 +92,7 @@ const movePiece = (
         * map: A board map
         * pieceLocation: The coordinates of the piece that can be moved.
     Explanation:
-    This function checks the pieces that can be attacked by the selected piece.
+    This function checks the tiles that are endangered by the selected piece.
 */
 export const checkAvailableAttacksForPiece = (
     map: Array<Array<string>>,
