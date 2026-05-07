@@ -231,10 +231,16 @@ export const getLegalMoves = (
             const dir = isWhite == true ? -1 : 1;
             for (const endangeredTile of endangeredTiles) {
                 if (inBounds(coordsX + endangeredTile[0] * dir, coordsY + endangeredTile[1])) {
-                    const target = map[coordsX + endangeredTile[0]][coordsY + endangeredTile[1]]
+                    const target = map[coordsX + endangeredTile[0] * dir][coordsY + endangeredTile[1]];
                     if (target !== ' ' && isUpper(target) !== isUpper(piece)) {
-                        mappedLegalMoves[coordsX + endangeredTile[0]][coordsY + endangeredTile[1]] = 1;
+                        mappedLegalMoves[coordsX + endangeredTile[0] * dir][coordsY + endangeredTile[1]] = 1;
                     }
+                }
+            }
+            if(inBounds(coordsX + dir, coordsY) && map[coordsX + dir][coordsY] == ' '){
+                mappedLegalMoves[coordsX + dir][coordsY] = 1;
+                if((isWhite ? coordsX == 6 : coordsX == 1) && map[coordsX + dir * 2][coordsY] == ' '){
+                    mappedLegalMoves[coordsX + dir * 2][coordsY] = 1
                 }
             }
             break
@@ -342,24 +348,8 @@ export const validateMove = (map: Array<Array<string>>, start: [number, number],
     switch (pieceType) {
         case 'p':
             {
-                const dir = team === "white" ? -1 : 1;
-                const startRow = team === "white" ? 6 : 1;
-                if ((distance[0] == dir) && distance[1] == 0) {
-                    if (map[destination[0]][destination[1]] != ' ') {
-                        return false
-                    }
-                    return true
-                }
-                if (distance[0] == dir * 2 && distance[1] == 0) {
-                    if (map[destination[0]][destination[1]] != ' ' || start[0] != startRow) {
-                        return false
-                    }
-                    return true
-                }
-                if (distance[0] == dir && distance[1] == dir) {
-                    if (map[destination[0]][destination[1]] == ' ') {
-                        return false
-                    }
+                const pawnMoves = getLegalMoves(map,start)
+                if(pawnMoves[destination[0]][destination[1]] == 1){
                     return true
                 }
                 break
