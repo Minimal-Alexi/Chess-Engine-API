@@ -439,8 +439,8 @@ export const validateMove = (map: Array<Array<string>>, start: [number, number],
         * destination: The destination of the piece.
         * team: The team string.
     Explanation:
-    Code checks if the right team tried to move a chess piece, check if the destination and start are within bounds, then validates the move,
-    changes the fen string.
+    Check if the destination and start are within bounds, then validates the move,
+    Change the fen string.
 */
 export const makeMove = (fen: string, start: [number, number], destination: [number, number], team: string): string => {
     return "";
