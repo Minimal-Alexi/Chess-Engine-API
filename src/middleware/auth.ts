@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { SECRET } from '../config/constants';
 import { Request, Response, NextFunction } from "express";
 
-const requireAuth = (req: Request, res: Response, next: NextFunction) => {
+export const requireAuth = (req: Request, res: Response, next: NextFunction) => {
   const { authorization } = req.headers;
 
   if (!authorization) {
