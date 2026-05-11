@@ -10,14 +10,14 @@ CREATE TABLE users (
 CREATE TABLE game (
     game_id SERIAL PRIMARY KEY,
     turn_counter INTEGER NOT NULL DEFAULT 0,
-    team_turn VARCHAR(20) NOT NULL
+    game_state VARCHAR(128) NOT NULL DEFAULT "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR",
 );
 
 -- PLAYER (JOIN TABLE: users <-> game)
 CREATE TABLE player (
     user_id INTEGER NOT NULL,
     game_id INTEGER NOT NULL,
-    team VARCHAR(20) NOT NULL,
+    team VARCHAR(8) NOT NULL,
 
     PRIMARY KEY (user_id, game_id),
 
