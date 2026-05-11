@@ -4,15 +4,15 @@ export const createGame = async (playerOneId:number, playerTwoId:number):Promise
     return null;
 }
 
-export const getGameById = async(id:number):Promise<Game|null> => {
+export const findGameById = async(id:number):Promise<Game|null> => {
     return null;
 }
 
-export const getPieceLegalMoves = async(gameId:number,piecePos: [number,number]):Promise<Array<Array<number>>> => {
+export const calculatePieceLegalMoves = async(gameId:number,piecePos: [number,number]):Promise<Array<Array<number>>> => {
     return []
 }
 
-export const playTurn = async(game: Game,playerId:number, start: [number, number], destination: [number, number]):Promise<Game|null> => {
+export const executeTurn = async(game: Game,playerId:number, start: [number, number], destination: [number, number]):Promise<Game|null> => {
     return null;
 }
 
