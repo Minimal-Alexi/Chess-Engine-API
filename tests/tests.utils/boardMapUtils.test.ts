@@ -1,4 +1,4 @@
-import { getEndangeredTilesByPiece, createBoardMap, createFenString, isCheck, isCheckMate, validateMove } from "../../src/utils/boardMapUtils";
+import { getEndangeredTilesByPiece, createBoardMap, createFenString, isCheck, isCheckMate, validateMove, makeMove } from "../../src/utils/boardMapUtils";
 
 describe("Test createBoardMap function", () => {
     it("Should create a board map from a FEN string", () => {
@@ -929,5 +929,75 @@ describe("Test validateMove function", () => {
         IMPORTANT: IMPOSSIBLE TO VALIDATE RIGHT NOW, AS THERE IS NO WAY TO KNOW IF THE KING OR ROOK HAS MOVED BEFORE, WHICH IS NECESSARY FOR CASTLING.
         THIS CAN BE FIXED BY ADDING A VARIABLE TO THE BOARD MAP THAT TRACKS THIS, BUT IT WOULD REQUIRE SIGNIFICANT CHANGES TO THE CODE, SO I'LL PROBABLY JUST LEAVE THIS OUT FOR NOW.
                 }) */
+    })
+})
+describe("Test makeMove function", () => {
+    it("Should return a new fen string if the move is valid.", () => {
+        const boardMap = [
+            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+        ]
+        const boardMapWhite = [
+            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+        ]
+        const boardMapBlack = [
+            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+            [' ', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['p', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+        ]
+        expect(makeMove(createFenString(boardMap)!, [6, 0], [4, 0], "white")).toEqual(createFenString(boardMapWhite))
+        expect(makeMove(createFenString(boardMap)!, [1, 0], [3, 0], "black")).toEqual(createFenString(boardMapBlack))
+    })
+    it("Should throw an error if move is invalid.", () => {
+        const boardMap = [
+            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+        ]
+        expect(() => makeMove(createFenString(boardMap)!, [0,6], [0,3], "white"))
+        .toThrow("Invalid move.")
+
+        expect(() => makeMove(createFenString(boardMap)!, [0,6], [0,4], "black"))
+        .toThrow("Invalid move.")
+    })
+    it("Should throw an error if move is out of bounds.", () => {
+        const boardMap = [
+            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+        ]
+        expect(() => makeMove(createFenString(boardMap)!, [0, 4], [55, 33], "white"))
+            .toThrow("Destination out of bounds.")
+
+        expect(() => makeMove(createFenString(boardMap)!, [69, 6], [0, 4], "black"))
+            .toThrow("Start out of bounds.")
     })
 })

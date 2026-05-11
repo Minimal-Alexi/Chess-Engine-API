@@ -430,5 +430,22 @@ export const validateMove = (map: Array<Array<string>>, start: [number, number],
     Change the fen string.
 */
 export const makeMove = (fen: string, start: [number, number], destination: [number, number], team: string): string => {
-    return "";
+    if(!inBounds(start[0],start[1])){
+        throw Error("Start out of bounds.");
+    }
+
+    if(!inBounds(destination[0],destination[1])){
+        throw Error("Destination out of bounds.");
+    }
+
+    const board = createBoardMap(fen)
+    if(!board){
+        throw Error("Fen string is invalid. NOTIFY THE DEVELOPER!")
+    }
+
+    if(!validateMove(createBoardMap(fen)!,start,destination,team)){
+        throw Error("Invalid move.")
+    }
+
+    return createFenString(movePiece(board,start,destination))!
 }
