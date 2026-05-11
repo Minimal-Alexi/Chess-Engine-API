@@ -14,10 +14,6 @@ jest.mock('../../src/config/database', () => {
   };
 });
 
-jest.mock('../../src/utils/createToken', () => {
-  return jest.fn((id) => `mock-token-${id}`);
-});
-
 
 const pool = require('../../src/config/database').pool;
 
