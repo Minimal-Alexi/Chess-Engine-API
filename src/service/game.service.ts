@@ -1,7 +1,7 @@
 import { Game } from "../models/game.model"
 
-export const createGame = async (playerOneId:number, playerTwoId:number):Promise<Game | null> => {
-    return null;
+export const createGameService = async (playerOneId:number, playerTwoId:number):Promise<Game> => {
+    return new Game(0,0,undefined);
 }
 
 export const findGameById = async(id:number):Promise<Game|null> => {
