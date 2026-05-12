@@ -266,11 +266,21 @@ const getPseudoLegalMoves = (
     Variables:
         * map: A board map
         * selectedPieceLocation: The coordinates of the piece that can be moved.
+        * team: The team string
     Explanation:
     This function uses getPseudoLegalMoves map + validateMove to create a map of only the valid moves. 
 */
-export const getLegalMoves = (map: Array<Array<string>>, selectedPieceLocation: [number, number]) => {
-
+export const getLegalMoves = (map: Array<Array<string>>, selectedPieceLocation: [number, number], team: string):Array<Array<number>> => {
+    let pieceMoves = getPseudoLegalMoves(map,selectedPieceLocation)
+    
+    for(let i = 0; i <= 7 ; ++i){
+        for(let j = 0; j <= 7; ++j){
+            if(pieceMoves[i][j] == 1 && !validateMove(map,selectedPieceLocation,[i,j],team)){
+                pieceMoves[i][j] = 0
+            }
+        }
+    }
+    return pieceMoves
 }
 
 /*
