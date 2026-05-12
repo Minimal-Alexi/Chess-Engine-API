@@ -8,9 +8,7 @@ export const createGameService = async (playerOneId:number, playerTwoId:number):
     VALUES (DEFAULT, DEFAULT)
     RETURNING game_id, turn_counter, game_state;
     `)).rows[0];
-
-    console.log("gameResult: " + gameResult)
-
+    
     const whitePlayer = (await pool.query(
         `
         INSERT INTO players(game_id,user_id,team) VALUES ($1, $2, $3) RETURNING *;
