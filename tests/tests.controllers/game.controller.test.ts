@@ -90,9 +90,9 @@ describe('Game Controller', () => {
         .expect(201)
         .expect(res => {
           // Person that creates the game is white.
-          res.body.message.toBe("Game has been created, you may start!")
-          res.body.game.toHaveProperty('turnCounter', 0);
-          res.body.game.state.toHaveProperty('fen', "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+          expect(res.body.message).toBe("Game has been created, you may start!")
+          expect(res.body.game).toHaveProperty('turnCounter', 0);
+          expect(res.body.game.state).toHaveProperty('fen', "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
           expect(res.body.game.players).toEqual({
             white: {
               userId: userId,
@@ -141,7 +141,7 @@ describe('Game Controller', () => {
         .expect(200)
         .expect(res =>
            {
-            res.body.toHaveProperty("games")
+            expect(res.body).toHaveProperty("games")
           })
       
       const secondUserId = usersIds[2];
@@ -150,8 +150,8 @@ describe('Game Controller', () => {
         .expect(200)
         .expect(res =>
            {
-            res.body.message.toBe("No games were found, maybe it's time you found a worth opponent!")
-            res.body.toHaveProperty("games", [])
+            expect(res.body.message).toBe("No games were found, maybe it's time you found a worth opponent!")
+            expect(res.body).toHaveProperty("games", [])
           }
         );
     })
@@ -176,7 +176,7 @@ describe('Game Controller', () => {
       .expect(200)
       .expect(res =>
            {
-            res.body.toHaveProperty("moves", bishopMap)
+            expect(res.body).toHaveProperty("moves", bishopMap)
           }
         );
     })
@@ -199,7 +199,7 @@ describe('Game Controller', () => {
       .expect(200)
       .expect(res =>
            {
-            res.body.toHaveProperty("moves", kingMoves)
+            expect(res.body).toHaveProperty("moves", kingMoves)
           }
         );
 
@@ -247,7 +247,7 @@ describe('Game Controller', () => {
         .set("Authorization", 'Bearer ' + createToken(userId))
         .expect(200)
         .expect(res => {
-          res.body.state.toHaveProperty('board', endMap)
+          expect(res.body.state).toHaveProperty('board', endMap)
         })
 
     })
@@ -276,8 +276,8 @@ describe('Game Controller', () => {
         .set("Authorization", 'Bearer ' + createToken(userId))
         .expect(200)
         .expect(res => {
-          res.body.message.toBe("Congratulations, you have won!");
-          res.body.state.toHaveProperty('board', endMap);
+          expect(res.body.message).toBe("Congratulations, you have won!");
+          expect(res.body.state).toHaveProperty('board', endMap);
         })
     })
     it("Should not return anything if the players' move is illegal. (409)", async () => {
@@ -293,7 +293,7 @@ describe('Game Controller', () => {
         .set("Authorization", 'Bearer ' + createToken(userId))
         .expect(409)
         .expect(res => {
-          res.body.message.toBe("The move you tried is illegal, please try again.")
+          expect(res.body.message).toBe("The move you tried is illegal, please try again.")
         })
     })
     it("Should not return anything if the it's not the players turn. (409)", async () => {
@@ -309,7 +309,7 @@ describe('Game Controller', () => {
         .set("Authorization", 'Bearer ' + createToken(userId))
         .expect(409)
         .expect(res => {
-          res.body.message.toBe("It's not your turn yet.")
+          expect(res.body.message).toBe("It's not your turn yet.")
         })
     })
     it("Should not play a move if the player is not part of the game. (403)", async () => {
@@ -325,7 +325,7 @@ describe('Game Controller', () => {
         .set("Authorization", 'Bearer ' + createToken(userId))
         .expect(403)
         .expect(res => {
-          res.body.message.toBe("It's not your turn yet.")
+          expect(res.body.message).toBe("It's not your turn yet.")
         })
     })
   })
