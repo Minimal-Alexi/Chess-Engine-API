@@ -129,7 +129,11 @@ describe('Game Controller', () => {
       const userId = 1
       await api.get('/api/v1/games')
         .set("Authorization", 'Bearer ' + createToken(userId))
-        .expect(200);
+        .expect(200)
+        .expect(res =>
+           {
+            res.body.toHaveProperty("games")
+          })
       
       const secondUserId = 3
       await api.get('/api/v1/games')
