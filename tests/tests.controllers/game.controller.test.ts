@@ -133,7 +133,7 @@ describe('Game Controller', () => {
       
       const secondUserId = 3
       await api.get('/api/v1/games')
-        .set("Authorization", 'Bearer ' + createToken(userId))
+        .set("Authorization", 'Bearer ' + createToken(secondUserId))
         .expect(200)
         .expect(res =>
            {
@@ -150,6 +150,9 @@ describe('Game Controller', () => {
     it("Should be check aware. (200)", () => {
 
     })
+    it("Should not return anything if the it's not the players turn. (409)", () => {
+
+    })
     it("Should not return a pieces moves if the player is not part of the game (403)", () => {
 
     })
@@ -161,7 +164,10 @@ describe('Game Controller', () => {
     it("Should return a victory message if the move is a winning move. (200)", () => {
 
     })
-    it("Should not return anything if the players' move is illegal (409)", () => {
+    it("Should not return anything if the players' move is illegal. (409)", () => {
+
+    })
+    it("Should not return anything if the it's not the players turn. (409)", () => {
 
     })
     it("Should not play a move if the player is not part of the game. (403)", () => {
