@@ -63,7 +63,7 @@ beforeEach(async () => {
 });
 
 describe('Game Controller', () => {
-  it("Should expect authorization.", async () => {
+  it("Should expect authorization. (401)", async () => {
     await api.post('/api/v1/games/1')
       .expect(401)
 
@@ -73,7 +73,7 @@ describe('Game Controller', () => {
   })
 
   describe('Game Creation', () => {
-    it("Should create a glorious game between two opponents", async () => {
+    it("Should create a glorious game between two opponents. (201)", async () => {
       const userId = 1
       const opponentId = 3
       await api.post('/api/v1/games/createGame/' + opponentId)
@@ -84,16 +84,65 @@ describe('Game Controller', () => {
           res.body.message.toBe("Game has been created, you may start!")
           res.body.game.toHaveProperty('turnCounter', 0);
           res.body.game.state.toHaveProperty('fen', "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-          res.body.players.toHaveProperty('white', userId)
-          res.body.players.toHaveProperty('black', opponentId)
+          expect(res.body.players).toEqual({
+            white: {
+              userId: userId,
+              username: "test1",
+            },
+            black: {
+              userId: opponentId,
+              username: "newtestguy",
+            },
+          });
         });
     })
-    it("Should not create a game if a user doesn't exist.", async () => {
+    it("Should not create a game if a user doesn't exist. (404)", async () => {
       const userId = 1
       const opponentId = 4
       await api.post('/api/v1/games/createGame/' + opponentId)
         .set("Authorization", 'Bearer ' + createToken(userId))
         .expect(404);
+    })
+  })
+  describe('Getting game by id', () => {
+    it("Should retrieve the game the player requests. (200)", () => {
+
+    })
+    it("Shouldn't return anything if the game doesn't exist. (404)", () => {
+
+    })
+    it("Shouldn't return anything if the player does not participate in the game. (403)", () => {
+
+    })
+  })
+  describe("Get all of the users games", () => {
+    it("Should retrieve all the games the player requests. (200)", () => {
+
+    })
+  })
+  describe("Get a pieces legal moves", () => {
+    it("Should return a map of the available legal moves. (200)", () => {
+
+    })
+    it("Should be check aware. (200)", () => {
+
+    })
+    it("Should not return a pieces moves if the player is not part of the game (403)", () => {
+
+    })
+  })
+  describe("Play a turn", () => {
+    it("Should return a new map if the move is legal. (200)", () => {
+
+    })
+    it("Should return a victory message if the move is a winning move. (200)", () => {
+      
+    })
+    it("Should not return anything if the players' move is illegal (409)", () => {
+
+    })
+    it("Should not play a move if the player is not part of the game. (403)", () => {
+
     })
   })
 })
