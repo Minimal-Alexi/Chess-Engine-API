@@ -84,7 +84,7 @@ describe('Game Controller', () => {
           res.body.message.toBe("Game has been created, you may start!")
           res.body.game.toHaveProperty('turnCounter', 0);
           res.body.game.state.toHaveProperty('fen', "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-          expect(res.body.players).toEqual({
+          expect(res.body.game.players).toEqual({
             white: {
               userId: userId,
               username: "test1",
