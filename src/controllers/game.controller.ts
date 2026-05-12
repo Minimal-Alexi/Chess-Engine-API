@@ -8,7 +8,7 @@ export const getGameById = async (req: Request, res: Response) => {
   const { gameId } = req.params;
 };
 
-export const getAllUsersGame = (req: Request, res: Response) => {
+export const getAllUserGames = (req: Request, res: Response) => {
   
 }
 
