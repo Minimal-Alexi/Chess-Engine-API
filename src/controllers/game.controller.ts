@@ -27,22 +27,25 @@ export const createGame = async (req: Request, res: Response) => {
   return res.status(201).json({
     message: "Game has been created, you may start!",
     game: game.toJSON()
-    
+
   })
 };
 
 export const getGameById = async (req: Request, res: Response) => {
   const { gameId } = req.params;
+  return res.status(404)
 };
 
 export const getAllUserGames = (req: Request, res: Response) => {
-  
+  return res.status(404)
 }
 
 export const getPieceLegalMoves = async (req: Request, res: Response) => {
   const { gameId } = req.params;
+  return res.status(404)
 };
 
 export const playTurn = async (req: Request, res: Response) => {
   const { gameId } = req.params;
+  return res.status(404)
 };
