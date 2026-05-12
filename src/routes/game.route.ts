@@ -7,7 +7,7 @@ const router = Router();
 router.use(requireAuth)
 router.post('/createGame/:targetUserId', createGame);
 router.get('/:gameId', getGameById)
-router.get('/legalMoves/:gameId', getPieceLegalMoves)
+router.get('/:gameId/legalMoves', getPieceLegalMoves)
 router.post('/:gameId/playTurn', playTurn);
 
 export default router;

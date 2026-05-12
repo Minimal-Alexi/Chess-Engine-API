@@ -157,7 +157,7 @@ describe('Game Controller', () => {
         [0, 0, 0, 0, 0, 0, 0, 0]
       ];
       const coords = [0, 5]
-      await api.get('/api/v1/games/legalMoves/2')
+      await api.get('/api/v1/games/2/legalMoves')
       .set("Authorization", 'Bearer ' + createToken(userId))
       .send(coords)
       .expect(200)
@@ -180,7 +180,7 @@ describe('Game Controller', () => {
         [0, 0, 0, 0, 0, 0, 0, 0]
       ];
       const coords = [0, 0]
-      await api.get('/api/v1/games/legalMoves/2')
+      await api.get('/api/v1/games/1/legalMoves')
       .set("Authorization", 'Bearer ' + createToken(userId))
       .send(coords)
       .expect(200)
@@ -192,9 +192,9 @@ describe('Game Controller', () => {
 
     })
     it("Should not return anything if it's not the players turn. (409)", async () => {
-      const userId = 1;
+      const userId = 2;
       const coords = [0, 0]
-      await api.get('/api/v1/games/legalMoves/2')
+      await api.get('/api/v1/games/2/legalMoves')
       .set("Authorization", 'Bearer ' + createToken(userId))
       .send(coords)
       .expect(409)
@@ -202,7 +202,7 @@ describe('Game Controller', () => {
     it("Should not return a pieces moves if the player is not part of the game (403)", async () => {
       const userId = 3;
       const coords = [0, 0]
-      await api.get('/api/v1/games/legalMoves/2')
+      await api.get('/api/v1/games/2/legalMoves')
       .set("Authorization", 'Bearer ' + createToken(userId))
       .send(coords)
       .expect(403)
