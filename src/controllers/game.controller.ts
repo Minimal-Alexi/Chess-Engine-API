@@ -23,10 +23,11 @@ export const createGame = async (req: Request, res: Response) => {
     }
 
     const game = await createGameService(userId, targetUserId)
+    const gameJson = await game.toJSON()
 
     return res.status(201).json({
       message: "Game has been created, you may start!",
-      game: game.toJSON()
+      game: gameJson
 
     })
   } catch (error) {

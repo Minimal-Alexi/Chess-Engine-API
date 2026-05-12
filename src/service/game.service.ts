@@ -28,7 +28,7 @@ export const createGameService = async (playerOneId:number, playerTwoId:number):
         gameResult.game_id,
         gameResult.turn_counter,
         gameResult.game_state,
-        [new Player(gameResult.game_id,whitePlayer.playerId,"white"), new Player(gameResult.game_id,blackPlayer.playerId,"black")])
+        [new Player(whitePlayer.user_id,gameResult.game_id,"white"), new Player(blackPlayer.user_id,gameResult.game_id,"black")])
 }
 
 export const findGameById = async(id:number):Promise<Game|null> => {
