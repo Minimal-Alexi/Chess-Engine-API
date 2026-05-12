@@ -1,7 +1,34 @@
 import { Game } from "../models/game.model"
+import { Player } from "../models/player.model";
+const pool = require('../config/database').pool;
 
 export const createGameService = async (playerOneId:number, playerTwoId:number):Promise<Game> => {
-    return new Game(0,0,undefined);
+    const gameResult = await pool.query(
+        `
+        INSERT INTO games DEFAULT VALUES
+        RETURNING game_id, turn_counter, game_state
+    `).rows[0]
+
+    const whitePlayer = await pool.query(
+        `
+        INSERT INTO players(game_id,user_id) VALUES ($1, $2, $3) RETURNING *
+        `
+        ,[gameResult.game_id, playerOneId, "white"]
+    ).rows[0]
+
+    const blackPlayer = await pool.query(
+        `
+        INSERT INTO players(game_id,user_id,team) VALUES ($1, $2, $3) RETURNING *
+        `
+        ,[gameResult.game_id, playerTwoId, "black"]
+    ).rows[0]
+
+    return new Game
+    (
+        gameResult.game_id,
+        gameResult.turn_counter,
+        gameResult.state,
+        [new Player(gameResult.game_id,whitePlayer.playerId,"white"), new Player(gameResult.game_id,blackPlayer.playerId,"black")])
 }
 
 export const findGameById = async(id:number):Promise<Game|null> => {
