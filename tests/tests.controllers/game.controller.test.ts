@@ -144,17 +144,68 @@ describe('Game Controller', () => {
     })
   })
   describe("Get a pieces legal moves", () => {
-    it("Should return a map of the available legal moves. (200)", () => {
+    it("Should return a map of the available legal moves. (200)", async () => {
+      const userId = 1;
+      const bishopMap = [
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 0, 0, 0],
+        [0, 0, 0, 1, 0, 0, 0, 0],
+        [0, 0, 1, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0, 0],
+        [1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0]
+      ];
+      const coords = [0, 5]
+      await api.get('/api/v1/games/legalMoves/2')
+      .set("Authorization", 'Bearer ' + createToken(userId))
+      .send(coords)
+      .expect(200)
+      .expect(res =>
+           {
+            res.body.toHaveProperty("moves", bishopMap)
+          }
+        );
+    })
+    it("Should be check aware. (200)", async () => {
+      const userId = 2;
+      const kingMoves = [
+        [0, 1, 0, 0, 0, 0, 0, 0],
+        [1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0]
+      ];
+      const coords = [0, 0]
+      await api.get('/api/v1/games/legalMoves/2')
+      .set("Authorization", 'Bearer ' + createToken(userId))
+      .send(coords)
+      .expect(200)
+      .expect(res =>
+           {
+            res.body.toHaveProperty("moves", kingMoves)
+          }
+        );
 
     })
-    it("Should be check aware. (200)", () => {
-
+    it("Should not return anything if it's not the players turn. (409)", async () => {
+      const userId = 1;
+      const coords = [0, 0]
+      await api.get('/api/v1/games/legalMoves/2')
+      .set("Authorization", 'Bearer ' + createToken(userId))
+      .send(coords)
+      .expect(409)
     })
-    it("Should not return anything if the it's not the players turn. (409)", () => {
-
-    })
-    it("Should not return a pieces moves if the player is not part of the game (403)", () => {
-
+    it("Should not return a pieces moves if the player is not part of the game (403)", async () => {
+      const userId = 3;
+      const coords = [0, 0]
+      await api.get('/api/v1/games/legalMoves/2')
+      .set("Authorization", 'Bearer ' + createToken(userId))
+      .send(coords)
+      .expect(403)
     })
   })
   describe("Play a turn", () => {
