@@ -2,7 +2,7 @@ import { User } from '../models/user.model';
 const pool = require('../config/database').pool;
 
 export const findUserById = async (id: number): Promise<User | null> => {
-    const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+    const result = await pool.query('SELECT * FROM users WHERE user_id = $1', [id]);
     
     const row = result.rows[0];
 
