@@ -22,10 +22,12 @@ export class Game {
                 fen: this.state,
                 board: createBoardMap(this.state)
             },
-            players: {
-                ...(await this.players[0]!.toJSON()),
-                ...(await this.players[1]!.toJSON())
-            }
+            players: this.players?.length == 2
+                ? {
+                    ...(this.players[0] ? await this.players[0].toJSON() : {}),
+                    ...(this.players[1] ? await this.players[1].toJSON() : {})
+                }
+                : {}
         };
     }
 }

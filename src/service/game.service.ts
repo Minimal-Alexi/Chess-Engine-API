@@ -55,6 +55,27 @@ export const findGameById = async(id:number):Promise<Game|null> => {
 
 }
 
+export const findUsersGames = async(userId:number):Promise<Array<Game>> => {
+    const gameSearch = await pool.query(
+        `
+    SELECT games.*
+    FROM games
+    JOIN players
+        ON games.game_id = players.game_id
+    WHERE players.user_id = $1
+  `,
+        [userId]
+    )
+
+    const gameArray: Array<Game> = []
+
+    for(const game of gameSearch.rows){
+        gameArray.push(new Game(game.game_id,game.turn_counter,game.game_state,undefined))
+    }
+
+    return gameArray
+}
+
 export const calculatePieceLegalMoves = async(gameId:number,piecePos: [number,number]):Promise<Array<Array<number>>> => {
     return []
 }

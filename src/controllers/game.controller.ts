@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createGameService, findGameById } from '../service/game.service';
+import { createGameService, findGameById, findUsersGames } from '../service/game.service';
 import { findUserById } from '../service/user.service';
 
 export const createGame = async (req: Request, res: Response) => {
@@ -65,8 +65,23 @@ export const getGameById = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllUserGames = (req: Request, res: Response) => {
-  return res.status(404).json({ message: "Not implemented" });
+export const getAllUserGames = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user;
+    const gameArray = await findUsersGames(userId)
+    let message = "Found some games.";
+    if(gameArray.length == 0){
+      message = "No games were found, maybe it's time you found a worth opponent!";
+    }
+    return res.status(200).json({
+      message: message,
+      games: gameArray.map(game => game.toJSON())
+    });
+
+  } catch (error) {
+    console.error("Error getting all of users board games: " + error)
+    return res.status(500).json({ error: "Server error, failed to get your games." })
+  }
 }
 
 export const getPieceLegalMoves = async (req: Request, res: Response) => {
