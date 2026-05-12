@@ -32,7 +32,27 @@ export const createGameService = async (playerOneId:number, playerTwoId:number):
 }
 
 export const findGameById = async(id:number):Promise<Game|null> => {
-    return null;
+    const gameSearch = await pool.query(`SELECT * FROM games WHERE game_id = $1`, [id])
+    const playerSearch = await pool.query(`SELECT * FROM players WHERE game_id = $1`, [id])
+
+    const gameRow = gameSearch.rows[0]
+    if(!gameRow){
+        return null;
+    }
+
+    const playerArray : Array<Player> = []
+
+    for(const player of playerSearch.rows){
+        playerArray.push(new Player(player.user_id,player.game_id,player.team))
+    }
+
+    return new Game(
+        gameRow.game_id,
+        gameRow.turn_counter,
+        gameRow.game_state,
+        playerArray
+    )
+
 }
 
 export const calculatePieceLegalMoves = async(gameId:number,piecePos: [number,number]):Promise<Array<Array<number>>> => {

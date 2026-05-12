@@ -116,19 +116,19 @@ describe('Game Controller', () => {
   describe('Getting game by id', () => {
     it("Should retrieve the game the player requests. (200)", async () => {
       const userId = usersIds[0];
-      await api.get('/api/v1/games/1')
+      await api.get('/api/v1/games/' + gameIds[0])
         .set("Authorization", 'Bearer ' + createToken(userId))
         .expect(200);
     })
     it("Shouldn't return anything if the game doesn't exist. (404)", async () => {
       const userId = usersIds[0];
-      await api.get('/api/v1/games/6')
+      await api.get('/api/v1/games/' + (gameIds[1] + 1))
         .set("Authorization", 'Bearer ' + createToken(userId))
         .expect(404);
     })
     it("Shouldn't return anything if the player does not participate in the game. (403)",  async () => {
       const userId = usersIds[2];
-      await api.get('/api/v1/games/2')
+      await api.get('/api/v1/games/' + gameIds[1])
         .set("Authorization", 'Bearer ' + createToken(userId))
         .expect(403);
     })
