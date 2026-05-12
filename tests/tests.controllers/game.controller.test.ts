@@ -17,14 +17,20 @@ jest.mock('../../src/config/database', () => {
 
 const pool = require('../../src/config/database').pool;
 
+let usersIds:Array<number>,gameIds:Array<number>; 
+
 beforeEach(async () => {
-  await pool.query(`
-  INSERT INTO users (user_id, username, email, password)
-  VALUES
-    (1, 'test1', 'test1@example.com', 'banana'),
-    (2, 'test2', 'test2@example.com', 'banana2'),
-    (3, 'newtestguy', 'testguy@example.com', 'banana3');
-`);
+  const usersResult = await pool.query(`
+    INSERT INTO users (username, email, password)
+    VALUES
+      ('test1', 'test1@example.com', 'banana'),
+      ('test2', 'test2@example.com', 'banana2'),
+      ('newtestguy', 'testguy@example.com', 'banana3')
+    RETURNING user_id;
+  `);
+
+  usersIds = usersResult.rows.map((row: { user_id: any; }) => row.user_id);
+
   // First game is a check game, second is a mate game.
   const checkGame = [
     ['k', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -46,19 +52,22 @@ beforeEach(async () => {
     ['P', 'P', 'P', 'P', 'P', ' ', ' ', 'P'],
     ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
   ];
-  await pool.query(`
-    INSERT INTO games (game_id, turn_counter, game_state)
+  const gamesResult = await pool.query(`
+    INSERT INTO games (turn_counter, game_state)
     VALUES
-        (1, 1,'${createFenString(checkGame)}'),
-        (2, 1,'${createFenString(mateGame)}');
-    `);
+      (1, '${createFenString(checkGame)}'),
+      (1, '${createFenString(mateGame)}')
+    RETURNING game_id;
+  `);
+
+  gameIds = gamesResult.rows.map((row: { game_id: any; }) => row.game_id);
   await pool.query(`
     INSERT INTO players (game_id, user_id, team)
     VALUES
-        (1,1,'white'),
-        (1,2,'black'),
-        (2,2,'white'),
-        (2,1,'black');
+        (${gameIds[0]},${usersIds[0]},'white'),
+        (${gameIds[0]},${usersIds[1]},'black'),
+        (${gameIds[1]},${usersIds[1]},'white'),
+        (${gameIds[1]},${usersIds[0]},'black');
       `)
 });
 
@@ -74,8 +83,8 @@ describe('Game Controller', () => {
 
   describe('Game Creation', () => {
     it("Should create a glorious game between two opponents. (201)", async () => {
-      const userId = 1
-      const opponentId = 3
+      const userId = usersIds[0]
+      const opponentId = usersIds[2]
       await api.post('/api/v1/games/createGame/' + opponentId)
         .set("Authorization", 'Bearer ' + createToken(userId))
         .expect(201)
@@ -97,8 +106,8 @@ describe('Game Controller', () => {
         });
     })
     it("Should not create a game if a user doesn't exist. (404)", async () => {
-      const userId = 1
-      const opponentId = 4
+      const userId = usersIds[0];
+      const opponentId = usersIds[2] + 1;
       await api.post('/api/v1/games/createGame/' + opponentId)
         .set("Authorization", 'Bearer ' + createToken(userId))
         .expect(404);
@@ -106,19 +115,19 @@ describe('Game Controller', () => {
   })
   describe('Getting game by id', () => {
     it("Should retrieve the game the player requests. (200)", async () => {
-      const userId = 1
+      const userId = usersIds[0];
       await api.get('/api/v1/games/1')
         .set("Authorization", 'Bearer ' + createToken(userId))
         .expect(200);
     })
     it("Shouldn't return anything if the game doesn't exist. (404)", async () => {
-      const userId = 1
+      const userId = usersIds[0];
       await api.get('/api/v1/games/6')
         .set("Authorization", 'Bearer ' + createToken(userId))
         .expect(404);
     })
     it("Shouldn't return anything if the player does not participate in the game. (403)",  async () => {
-      const userId = 3
+      const userId = usersIds[2];
       await api.get('/api/v1/games/2')
         .set("Authorization", 'Bearer ' + createToken(userId))
         .expect(403);
@@ -126,7 +135,7 @@ describe('Game Controller', () => {
   })
   describe("Get all of the users games", () => {
     it("Should retrieve all the games the player requests. (200)", async () => {
-      const userId = 1
+      const userId = usersIds[0];
       await api.get('/api/v1/games')
         .set("Authorization", 'Bearer ' + createToken(userId))
         .expect(200)
@@ -135,7 +144,7 @@ describe('Game Controller', () => {
             res.body.toHaveProperty("games")
           })
       
-      const secondUserId = 3
+      const secondUserId = usersIds[2];
       await api.get('/api/v1/games')
         .set("Authorization", 'Bearer ' + createToken(secondUserId))
         .expect(200)
@@ -149,7 +158,7 @@ describe('Game Controller', () => {
   })
   describe("Get a pieces legal moves", () => {
     it("Should return a map of the available legal moves. (200)", async () => {
-      const userId = 1;
+      const userId = usersIds[0];
       const bishopMap = [
         [0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 1, 0, 0, 0],
@@ -172,7 +181,7 @@ describe('Game Controller', () => {
         );
     })
     it("Should be check aware. (200)", async () => {
-      const userId = 2;
+      const userId = usersIds[1];
       const kingMoves = [
         [0, 1, 0, 0, 0, 0, 0, 0],
         [1, 0, 0, 0, 0, 0, 0, 0],
@@ -183,7 +192,7 @@ describe('Game Controller', () => {
         [0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0]
       ];
-      const coords = [0, 0]
+      const coords = [0, 0];
       await api.get('/api/v1/games/1/legalMoves')
       .set("Authorization", 'Bearer ' + createToken(userId))
       .send(coords)
@@ -196,7 +205,7 @@ describe('Game Controller', () => {
 
     })
     it("Should not return anything if it's not the players turn. (409)", async () => {
-      const userId = 2;
+      const userId = usersIds[1];
       const coords = [0, 0]
       await api.get('/api/v1/games/2/legalMoves')
       .set("Authorization", 'Bearer ' + createToken(userId))
@@ -204,7 +213,7 @@ describe('Game Controller', () => {
       .expect(409)
     })
     it("Should not return a pieces moves if the player is not part of the game (403)", async () => {
-      const userId = 3;
+      const userId = usersIds[2];
       const coords = [0, 0]
       await api.get('/api/v1/games/2/legalMoves')
       .set("Authorization", 'Bearer ' + createToken(userId))
@@ -214,7 +223,7 @@ describe('Game Controller', () => {
   })
   describe("Play a turn", () => {
     it("Should return a new map if the move is legal. (200)", async () => {
-      const userId = 2
+      const userId = usersIds[1];
       const startCoords = [0, 0];
       const endCoords = [1, 0];
       const requestBody = {
@@ -243,7 +252,7 @@ describe('Game Controller', () => {
 
     })
     it("Should return a victory message if the move is a winning move. (200)", async () => {
-      const userId = 1
+      const userId = usersIds[0]
       const startCoords = [0, 3];
       const endCoords = [4, 7];
       const requestBody = {
@@ -272,7 +281,7 @@ describe('Game Controller', () => {
         })
     })
     it("Should not return anything if the players' move is illegal. (409)", async () => {
-      const userId = 2
+      const userId = usersIds[1]
       const startCoords = [0, 0];
       const endCoords = [1, 1];
       const requestBody = {
@@ -288,7 +297,7 @@ describe('Game Controller', () => {
         })
     })
     it("Should not return anything if the it's not the players turn. (409)", async () => {
-      const userId = 1
+      const userId = usersIds[0];
       const startCoords = [0, 0];
       const endCoords = [1, 1];
       const requestBody = {
@@ -304,7 +313,7 @@ describe('Game Controller', () => {
         })
     })
     it("Should not play a move if the player is not part of the game. (403)", async () => {
-      const userId = 3;
+      const userId = usersIds[2];
       const startCoords = [0, 0];
       const endCoords = [1, 1];
       const requestBody = {
