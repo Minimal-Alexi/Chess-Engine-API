@@ -209,20 +209,111 @@ describe('Game Controller', () => {
     })
   })
   describe("Play a turn", () => {
-    it("Should return a new map if the move is legal. (200)", () => {
+    it("Should return a new map if the move is legal. (200)", async () => {
+      const userId = 2
+      const startCoords = [0, 0];
+      const endCoords = [1, 0];
+      const requestBody = {
+        "startCoords": startCoords,
+        "endCoords": endCoords
+      }
+
+      const endMap = [
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        ['k', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', 'B', ' ', ' ', ' ', ' ', ' '],
+        ['n', ' ', ' ', ' ', ' ', ' ', ' ', 'p'],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', 'K']
+      ];
+
+      await api.post('/api/v1/games/1/playTurn')
+        .send(requestBody)
+        .set("Authorization", 'Bearer ' + createToken(userId))
+        .expect(200)
+        .expect(res => {
+          res.body.state.toHaveProperty('board', endMap)
+        })
 
     })
-    it("Should return a victory message if the move is a winning move. (200)", () => {
+    it("Should return a victory message if the move is a winning move. (200)", async () => {
+      const userId = 1
+      const startCoords = [0, 3];
+      const endCoords = [4, 7];
+      const requestBody = {
+        "startCoords": startCoords,
+        "endCoords": endCoords
+      }
 
+      const endMap = [
+        ['r', 'n', 'b', ' ', 'k', 'b', 'n', 'r'],
+        ['p', 'p', 'p', 'p', ' ', 'p', 'p', 'p'],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', 'p', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', 'P', 'q'],
+        [' ', ' ', ' ', ' ', ' ', 'P', ' ', ' '],
+        ['P', 'P', 'P', 'P', 'P', ' ', ' ', 'P'],
+        ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+      ];
+
+      await api.post('/api/v1/games/2/playTurn')
+        .send(requestBody)
+        .set("Authorization", 'Bearer ' + createToken(userId))
+        .expect(200)
+        .expect(res => {
+          res.body.message.toBe("Congratulations, you have won!");
+          res.body.state.toHaveProperty('board', endMap);
+        })
     })
-    it("Should not return anything if the players' move is illegal. (409)", () => {
-
+    it("Should not return anything if the players' move is illegal. (409)", async () => {
+      const userId = 2
+      const startCoords = [0, 0];
+      const endCoords = [1, 1];
+      const requestBody = {
+        "startCoords" : startCoords,
+        "endCoords": endCoords
+      }
+      await api.post('/api/v1/games/1/playTurn')
+        .send(requestBody)
+        .set("Authorization", 'Bearer ' + createToken(userId))
+        .expect(409)
+        .expect(res => {
+          res.body.message.toBe("The move you tried is illegal, please try again.")
+        })
     })
-    it("Should not return anything if the it's not the players turn. (409)", () => {
-
+    it("Should not return anything if the it's not the players turn. (409)", async () => {
+      const userId = 1
+      const startCoords = [0, 0];
+      const endCoords = [1, 1];
+      const requestBody = {
+        "startCoords" : startCoords,
+        "endCoords": endCoords
+      }
+      await api.post('/api/v1/games/1/playTurn')
+        .send(requestBody)
+        .set("Authorization", 'Bearer ' + createToken(userId))
+        .expect(409)
+        .expect(res => {
+          res.body.message.toBe("It's not your turn yet.")
+        })
     })
-    it("Should not play a move if the player is not part of the game. (403)", () => {
-
+    it("Should not play a move if the player is not part of the game. (403)", async () => {
+      const userId = 3;
+      const startCoords = [0, 0];
+      const endCoords = [1, 1];
+      const requestBody = {
+        "startCoords" : startCoords,
+        "endCoords": endCoords
+      }
+      await api.post('/api/v1/games/1/playTurn')
+        .send(requestBody)
+        .set("Authorization", 'Bearer ' + createToken(userId))
+        .expect(403)
+        .expect(res => {
+          res.body.message.toBe("It's not your turn yet.")
+        })
     })
   })
 })
