@@ -1,13 +1,23 @@
 import { findUserById } from "../service/user.service";
 
 export class Player{
-    user_id : number;
-    game_id : number;
+    userId : number;
+    gameId : number;
     team : string;
 
-    constructor(user_id:number,game_id:number,team:string){
-        this.user_id = user_id;
-        this.game_id = game_id;
+    constructor(userId:number,gameId:number,team:string){
+        this.userId = userId;
+        this.gameId = gameId;
         this.team = team;
+    }
+
+    async toJSON() {
+        const user = await findUserById(this.userId)
+        return {
+            [this.team]:{
+                userId: this.userId,
+                username: user?.username
+            }
+        }
     }
 }
