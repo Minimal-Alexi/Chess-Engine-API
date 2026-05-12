@@ -105,19 +105,42 @@ describe('Game Controller', () => {
     })
   })
   describe('Getting game by id', () => {
-    it("Should retrieve the game the player requests. (200)", () => {
-
+    it("Should retrieve the game the player requests. (200)", async () => {
+      const userId = 1
+      await api.get('/api/v1/games/1')
+        .set("Authorization", 'Bearer ' + createToken(userId))
+        .expect(200);
     })
-    it("Shouldn't return anything if the game doesn't exist. (404)", () => {
-
+    it("Shouldn't return anything if the game doesn't exist. (404)", async () => {
+      const userId = 1
+      await api.get('/api/v1/games/6')
+        .set("Authorization", 'Bearer ' + createToken(userId))
+        .expect(404);
     })
-    it("Shouldn't return anything if the player does not participate in the game. (403)", () => {
-
+    it("Shouldn't return anything if the player does not participate in the game. (403)",  async () => {
+      const userId = 3
+      await api.get('/api/v1/games/2')
+        .set("Authorization", 'Bearer ' + createToken(userId))
+        .expect(403);
     })
   })
   describe("Get all of the users games", () => {
-    it("Should retrieve all the games the player requests. (200)", () => {
-
+    it("Should retrieve all the games the player requests. (200)", async () => {
+      const userId = 1
+      await api.get('/api/v1/games')
+        .set("Authorization", 'Bearer ' + createToken(userId))
+        .expect(200);
+      
+      const secondUserId = 3
+      await api.get('/api/v1/games')
+        .set("Authorization", 'Bearer ' + createToken(userId))
+        .expect(200)
+        .expect(res =>
+           {
+            res.body.message.toBe("No games were found, maybe it's time you found a worth opponent!")
+            res.body.toHaveProperty("games", [])
+          }
+        );
     })
   })
   describe("Get a pieces legal moves", () => {
@@ -136,7 +159,7 @@ describe('Game Controller', () => {
 
     })
     it("Should return a victory message if the move is a winning move. (200)", () => {
-      
+
     })
     it("Should not return anything if the players' move is illegal (409)", () => {
 
