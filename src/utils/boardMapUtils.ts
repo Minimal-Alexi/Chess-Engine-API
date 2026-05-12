@@ -222,15 +222,15 @@ export const getEndangeredTilesByPiece = (
 }
 
 /*
-    Name: getLegalMoves
+    Name: getPseudoLegalMoves
     Creator: Minimal
     Variables:
         * map: A board map
         * selectedPieceLocation: The coordinates of the piece that can be moved.
     Explanation:
-    This function uses endangeredTilesMap with some extra logic to ensure the only legal moves are visible.
+    This function uses endangeredTilesMap with some extra logic to ensure that only pseudo legal moves are visible.
 */
-export const getLegalMoves = (
+const getPseudoLegalMoves = (
     map: Array<Array<string>>,
     selectedPieceLocation: [number, number]
 ): Array<Array<number>> => {
@@ -260,6 +260,18 @@ export const getLegalMoves = (
     return mappedLegalMoves
 }
 
+/*
+    Name: getLegalMoves
+    Creator: Minimal
+    Variables:
+        * map: A board map
+        * selectedPieceLocation: The coordinates of the piece that can be moved.
+    Explanation:
+    This function uses getPseudoLegalMoves map + validateMove to create a map of only the valid moves. 
+*/
+export const getLegalMoves = (map: Array<Array<string>>, selectedPieceLocation: [number, number]) => {
+
+}
 
 /*
     Name: isCheck
@@ -349,7 +361,7 @@ export const isCheckMate = (map: Array<Array<string>>, team: string): boolean =>
     // TODO: This should be done in a more efficient manner, but the last thing I want to work on is the fucking chess logic.
 
     if(checkingPieces.length >= 2){
-        const kingsEscapeRoutes = getLegalMoves(map,kingPosition);
+        const kingsEscapeRoutes = getPseudoLegalMoves(map,kingPosition);
         for (let i = 0; i <= 7; ++i) {
             for (let j = 0; j <= 7; ++j) {
                 if(kingsEscapeRoutes[i][j] == 1
@@ -366,7 +378,7 @@ export const isCheckMate = (map: Array<Array<string>>, team: string): boolean =>
         for (let j = 0; j <= 7; ++j) {
             const tile = map[i][j]
             if(tile != ' ' && (isUpper(tile) == isUpper(map[kingPosition[0]][kingPosition[1]]))){
-                const pieceLegalMoves = getLegalMoves(map,[i,j]);
+                const pieceLegalMoves = getPseudoLegalMoves(map,[i,j]);
                 for(let ii = 0; ii <= 7; ++ii){
                     for(let jj = 0; jj <= 7; ++jj){
                         if(pieceLegalMoves[ii][jj] == 1){
@@ -408,7 +420,7 @@ export const validateMove = (map: Array<Array<string>>, start: [number, number],
         return false
     }
 
-    const pieceMoves = getLegalMoves(map,start)
+    const pieceMoves = getPseudoLegalMoves(map,start)
     if(pieceMoves[destination[0]][destination[1]] == 1){
         return true
     }
