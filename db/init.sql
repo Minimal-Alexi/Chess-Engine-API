@@ -28,6 +28,6 @@ CREATE TABLE players (
 
     CONSTRAINT fk_player_game
         FOREIGN KEY (game_id)
-        REFERENCES game(game_id)
+        REFERENCES games(game_id)
         ON DELETE CASCADE
 );
