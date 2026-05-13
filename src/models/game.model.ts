@@ -31,6 +31,14 @@ export class Game {
         (player?.team !== 'white' && this.turnCounter % 2 !== 0);
     }
 
+    getPlayerTeam(userId:number):string{
+        if (!this.players) {
+            throw new Error("Player list not initialized for game " + this.id);
+        }
+
+        return this.players.find(player => player.userId === userId)?.team!
+    }
+
     async toJSON() {
         return {
             id: this.id,

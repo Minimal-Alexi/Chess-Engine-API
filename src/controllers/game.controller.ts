@@ -101,8 +101,7 @@ export const getPieceLegalMoves = async (req: Request, res: Response) => {
       return res.status(409).json({message:"It's currently not you turn."});
     }
 
-    const player = game.players.find(player => player.userId === userId);
-    const moves = await calculatePieceLegalMoves(game,position, player!.team)
+    const moves = await calculatePieceLegalMoves(game,position, game.getPlayerTeam(userId))
 
     return res.status(200).json({message:"Successfully found your pieces moves.",
       moves:moves
