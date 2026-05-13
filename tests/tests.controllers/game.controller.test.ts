@@ -170,7 +170,7 @@ describe('Game Controller', () => {
         [0, 0, 0, 0, 0, 0, 0, 0]
       ];
       const coords = [0, 5]
-      await api.get('/api/v1/games/2/legalMoves')
+      await api.get('/api/v1/games/' + gameIds[1] + '/legalMoves')
       .set("Authorization", 'Bearer ' + createToken(userId))
       .send(coords)
       .expect(200)
@@ -207,7 +207,7 @@ describe('Game Controller', () => {
     it("Should not return anything if it's not the players turn. (409)", async () => {
       const userId = usersIds[1];
       const coords = [0, 0]
-      await api.get('/api/v1/games/2/legalMoves')
+      await api.get('/api/v1/games/' + gameIds[1] + '/legalMoves')
       .set("Authorization", 'Bearer ' + createToken(userId))
       .send(coords)
       .expect(409)
@@ -215,7 +215,7 @@ describe('Game Controller', () => {
     it("Should not return a pieces moves if the player is not part of the game (403)", async () => {
       const userId = usersIds[2];
       const coords = [0, 0]
-      await api.get('/api/v1/games/2/legalMoves')
+      await api.get('/api/v1/games/'+ gameIds[1] + '/legalMoves')
       .set("Authorization", 'Bearer ' + createToken(userId))
       .send(coords)
       .expect(403)
@@ -242,7 +242,7 @@ describe('Game Controller', () => {
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', 'K']
       ];
 
-      await api.post('/api/v1/games/1/playTurn')
+      await api.post('/api/v1/games/' + gameIds[0] + '/playTurn')
         .send(requestBody)
         .set("Authorization", 'Bearer ' + createToken(userId))
         .expect(200)
@@ -271,7 +271,7 @@ describe('Game Controller', () => {
         ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
       ];
 
-      await api.post('/api/v1/games/2/playTurn')
+      await api.post('/api/v1/games/' + gameIds[1] + '/playTurn')
         .send(requestBody)
         .set("Authorization", 'Bearer ' + createToken(userId))
         .expect(200)
@@ -288,7 +288,7 @@ describe('Game Controller', () => {
         "startCoords" : startCoords,
         "endCoords": endCoords
       }
-      await api.post('/api/v1/games/1/playTurn')
+      await api.post('/api/v1/games/' + gameIds[1] + '/playTurn')
         .send(requestBody)
         .set("Authorization", 'Bearer ' + createToken(userId))
         .expect(409)
@@ -304,7 +304,7 @@ describe('Game Controller', () => {
         "startCoords" : startCoords,
         "endCoords": endCoords
       }
-      await api.post('/api/v1/games/1/playTurn')
+      await api.post('/api/v1/games/' + gameIds[0] +'/playTurn')
         .send(requestBody)
         .set("Authorization", 'Bearer ' + createToken(userId))
         .expect(409)
@@ -320,7 +320,7 @@ describe('Game Controller', () => {
         "startCoords" : startCoords,
         "endCoords": endCoords
       }
-      await api.post('/api/v1/games/1/playTurn')
+      await api.post('/api/v1/games/' + gameIds[0] +'/playTurn')
         .send(requestBody)
         .set("Authorization", 'Bearer ' + createToken(userId))
         .expect(403)
