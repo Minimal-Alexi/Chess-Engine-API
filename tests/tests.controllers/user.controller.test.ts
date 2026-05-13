@@ -28,7 +28,7 @@ beforeEach(async () => {
 describe('User Controller', () => {
   describe('Authentication handling', () => {
     describe('User Registration', () => {
-      it('Should register a new user', async () => {
+      it('Should register a new user (201)', async () => {
         const user = {
           username: 'newuser',
           email: 'newuser@example.com',
@@ -46,7 +46,7 @@ describe('User Controller', () => {
             expect(res.body.user).not.toHaveProperty('password');
           });
       });
-      it('Should not register a user with existing email', async () => {
+      it('Should not register a user with existing email (400)', async () => {
         const user = {
           username: 'test1',
           email: 'test1@example.com',
@@ -76,7 +76,7 @@ describe('User Controller', () => {
         expect(storedPassword).not.toBe(user.password);
         expect(bcrypt.compareSync(user.password, storedPassword)).toBe(true);
       });
-      it("Should check registration fields.", async () => {
+      it("Should check registration fields. (400)", async () => {
         const user = {
           username: 'salteduser',
           email: null,
@@ -88,7 +88,7 @@ describe('User Controller', () => {
           .expect(400)
           .expect('Content-Type', /application\/json/);
       });
-      it("Should check if the email is valid.", async () => {
+      it("Should check if the email is valid. (400)", async () => {
 
         const user = {
           username: 'validuser',
@@ -103,7 +103,7 @@ describe('User Controller', () => {
       });
     });
     describe('User Login', () => {
-      it('Should login an existing user', async () => {
+      it('Should login an existing user (200)', async () => {
         const credentials = {
           email: 'test1@example.com',
           password: 'password1'
@@ -114,7 +114,7 @@ describe('User Controller', () => {
           .expect(200)
           .expect('Content-Type', /application\/json/);
       });
-      it('Should not login with wrong credentials', async () => {
+      it('Should not login with wrong credentials (401)', async () => {
         const credentials = {
           email: 'test1@example.com',
           password: 'badpassword'
