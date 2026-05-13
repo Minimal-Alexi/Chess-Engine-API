@@ -259,7 +259,7 @@ describe('Game Controller', () => {
         .set("Authorization", 'Bearer ' + createToken(userId))
         .expect(200)
         .expect(res => {
-          expect(res.body.state).toHaveProperty('board', endMap)
+          expect(res.body.game.state).toHaveProperty('board', endMap)
         })
 
     })
@@ -289,7 +289,7 @@ describe('Game Controller', () => {
         .expect(200)
         .expect(res => {
           expect(res.body.message).toBe("Congratulations, you have won!");
-          expect(res.body.state).toHaveProperty('board', endMap);
+          expect(res.body.game.state).toHaveProperty('board', endMap);
         })
     })
     it("Should not return anything if the players' move is illegal. (409)", async () => {
