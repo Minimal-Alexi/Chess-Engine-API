@@ -1,5 +1,6 @@
 import { Game } from "../models/game.model"
 import { Player } from "../models/player.model";
+import { createBoardMap, getLegalMoves } from "../utils/boardMapUtils";
 const pool = require('../config/database').pool;
 
 export const createGameService = async (playerOneId:number, playerTwoId:number):Promise<Game> => {
@@ -76,8 +77,12 @@ export const findUsersGames = async(userId:number):Promise<Array<Game>> => {
     return gameArray
 }
 
-export const calculatePieceLegalMoves = async(gameId:number,piecePos: [number,number]):Promise<Array<Array<number>>> => {
-    return []
+export const calculatePieceLegalMoves = async(game:Game,piecePos: [number,number], team: string):Promise<Array<Array<number>>> => {
+    const boardMap = createBoardMap(game.state)
+    if(!boardMap){
+        throw new Error("Error creating board map for " + game.id)
+    }
+    return getLegalMoves(boardMap,piecePos,team)
 }
 
 export const executeTurn = async(game: Game,playerId:number, start: [number, number], destination: [number, number]):Promise<Game|null> => {

@@ -14,6 +14,23 @@ export class Game {
         this.players = players || []
     }
 
+    isUserInGame(userId: number): boolean {
+        if (!this.players) {
+            throw new Error("Player list not initialized for game " + this.id);
+        }
+
+        return this.players.some(player => player.userId === userId);
+    }
+
+    verifyTurnOrder(userId: number):boolean{
+        if(!this.players){
+            throw new Error("Player list not initialized for game " + this.id);
+        }
+        const player = this.players.find(player => player.userId === userId);
+        return (player?.team === 'white' && this.turnCounter % 2 === 0) ||
+        (player?.team !== 'white' && this.turnCounter % 2 !== 0);
+    }
+
     async toJSON() {
         return {
             id: this.id,
