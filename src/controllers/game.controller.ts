@@ -71,9 +71,13 @@ export const getAllUserGames = async (req: Request, res: Response) => {
     if(gameArray.length == 0){
       message = "No games were found, maybe it's time you found a worth opponent!";
     }
+
+    const gameJsonArray = await Promise.all(
+      gameArray.map(async game => await game.toJSON())
+    )
     return res.status(200).json({
       message: message,
-      games: gameArray.map(game => game.toJSON())
+      games: gameJsonArray
     });
 
   } catch (error) {
