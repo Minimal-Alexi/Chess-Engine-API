@@ -1,6 +1,6 @@
 import { Game } from "../models/game.model"
 import { Player } from "../models/player.model";
-import { createBoardMap, getLegalMoves } from "../utils/boardMapUtils";
+import { createBoardMap, getLegalMoves, isCheckMate, makeMove } from "../utils/boardMapUtils";
 const pool = require('../config/database').pool;
 
 export const createGameService = async (playerOneId:number, playerTwoId:number):Promise<Game> => {
@@ -85,7 +85,59 @@ export const calculatePieceLegalMoves = async(game:Game,piecePos: [number,number
     return getLegalMoves(boardMap,piecePos,team)
 }
 
-export const executeTurn = async(game: Game,playerId:number, start: [number, number], destination: [number, number]):Promise<Game|null> => {
-    return null;
+export const executeTurn = async (game: Game, playerId: number, start: [number, number], destination: [number, number]): Promise<Game | null> => {
+    try {
+        const newState = makeMove(game.state, start, destination, game.getPlayerTeam(playerId))
+        game.state = newState;
+        game.turnCounter = game.turnCounter + 1
+        const newGame = await updateGame(game)
+        return newGame
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+
+export const updateGame = async (game: Game): Promise<Game | null> => {
+    const gameUpdate = await pool.query(`
+            UPDATE games
+            SET game_state = $1, turn_counter = $2
+            WHERE game_id = $3
+            RETURNING *;
+        `, [game.state, game.turnCounter, game.id])
+    const playerSearch = await pool.query(`SELECT * FROM players WHERE game_id = $1`, [game.id])
+
+    if (!gameUpdate) {
+        return null;
+    }
+
+    const playerArray: Array<Player> = []
+
+    for (const player of playerSearch.rows) {
+        playerArray.push(new Player(player.user_id, player.game_id, player.team))
+    }
+
+    return new Game(
+        gameUpdate.game_id,
+        gameUpdate.turn_counter,
+        gameUpdate.game_state,
+        playerArray
+    )
+}
+
+export const winCheck = async (game: Game): Promise<boolean | string> => {
+    const boardMap = createBoardMap(game.state)
+    if (!boardMap) {
+        throw new Error("Error creating board map for " + game.id)
+    }
+
+    if (isCheckMate(createBoardMap(game.state)!, "white")) {
+        return "Black has won the game."
+    }
+    if (isCheckMate(createBoardMap(game.state)!, "blacks")) {
+        return "White has won the game."
+    }
+
+    return false;
 }
 

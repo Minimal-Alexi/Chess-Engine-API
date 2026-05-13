@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { calculatePieceLegalMoves, createGameService, findGameById, findUsersGames } from '../service/game.service';
+import { calculatePieceLegalMoves, createGameService, executeTurn, findGameById, findUsersGames, winCheck } from '../service/game.service';
 import { findUserById } from '../service/user.service';
 
 export const createGame = async (req: Request, res: Response) => {
@@ -113,6 +113,43 @@ export const getPieceLegalMoves = async (req: Request, res: Response) => {
 };
 
 export const playTurn = async (req: Request, res: Response) => {
-  const { gameId } = req.params;
-  return res.status(404).json({ message: "Not implemented" });
+  try{
+    const gameId = Number(req.params.gameId);
+    const game = await findGameById(gameId);
+    const userId = (req as any).user;
+    const startCoords: [number,number] = req.body.startCoords;
+    const endCoords: [number,number] = req.body.endCoords;
+
+    if(!game){
+        return res.status(404).json({message:"Couldn't find game. Are you sure that's the ID you were looking for?"});
+    }
+
+    if(!game.isUserInGame(userId)){
+        return res.status(403).json({message:"You are not participating in this game."});
+    }
+
+    if(!game.verifyTurnOrder(userId)){
+      return res.status(409).json({message:"It's not your turn yet."})
+    }
+
+    const newTurn = await executeTurn(game,userId,startCoords,endCoords);
+
+    if(!newTurn){
+      return res.status(409).json({message:"The move you tried is illegal, please try again."})
+    }
+    let message = "Successfully moved."
+    const isWin = await winCheck(game)
+    if(isWin != false){
+      message = "Congratulations, you have won!"
+    }
+
+    const gameJson = await game.toJSON()
+    return res.status(200).json({message:message,
+                                game:gameJson
+    })
+
+  }catch(error){
+    console.error("Error playing pieces moves: " + error)
+    return res.status(500).json({error: "Server error, failed to validate your turn."})
+  }
 };

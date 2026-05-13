@@ -300,7 +300,7 @@ describe('Game Controller', () => {
         "startCoords" : startCoords,
         "endCoords": endCoords
       }
-      await api.post('/api/v1/games/' + gameIds[1] + '/playTurn')
+      await api.post('/api/v1/games/' + gameIds[0] + '/playTurn')
         .send(requestBody)
         .set("Authorization", 'Bearer ' + createToken(userId))
         .expect(409)
@@ -337,7 +337,7 @@ describe('Game Controller', () => {
         .set("Authorization", 'Bearer ' + createToken(userId))
         .expect(403)
         .expect(res => {
-          expect(res.body.message).toBe("It's not your turn yet.")
+          expect(res.body.message).toBe("You are not participating in this game.")
         })
     })
   })
