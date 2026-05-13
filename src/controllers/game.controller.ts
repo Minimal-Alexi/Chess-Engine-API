@@ -102,7 +102,8 @@ export const getPieceLegalMoves = async (req: Request, res: Response) => {
     }
 
     const player = game.players.find(player => player.userId === userId);
-    const moves = calculatePieceLegalMoves(game,position, player!.team)
+    const moves = await calculatePieceLegalMoves(game,position, player!.team)
+
     return res.status(200).json({message:"Successfully found your pieces moves.",
       moves:moves
     })

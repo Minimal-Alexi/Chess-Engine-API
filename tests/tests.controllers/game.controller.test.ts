@@ -170,9 +170,12 @@ describe('Game Controller', () => {
         [0, 0, 0, 0, 0, 0, 0, 0]
       ];
       const coords = [0, 5]
+      const requestBody = {
+        position : coords
+      }
       await api.get('/api/v1/games/' + gameIds[1] + '/legalMoves')
       .set("Authorization", 'Bearer ' + createToken(userId))
-      .send(coords)
+      .send(requestBody)
       .expect(200)
       .expect(res =>
            {
@@ -193,9 +196,12 @@ describe('Game Controller', () => {
         [0, 0, 0, 0, 0, 0, 0, 0]
       ];
       const coords = [0, 0];
-      await api.get('/api/v1/games/1/legalMoves')
+      const requestBody = {
+        position : coords
+      }
+      await api.get('/api/v1/games/' + gameIds[0] + '/legalMoves')
       .set("Authorization", 'Bearer ' + createToken(userId))
-      .send(coords)
+      .send(requestBody)
       .expect(200)
       .expect(res =>
            {
@@ -207,17 +213,23 @@ describe('Game Controller', () => {
     it("Should not return anything if it's not the players turn. (409)", async () => {
       const userId = usersIds[1];
       const coords = [0, 0]
+      const requestBody = {
+        position : coords
+      }
       await api.get('/api/v1/games/' + gameIds[1] + '/legalMoves')
       .set("Authorization", 'Bearer ' + createToken(userId))
-      .send(coords)
+      .send(requestBody)
       .expect(409)
     })
     it("Should not return a pieces moves if the player is not part of the game (403)", async () => {
       const userId = usersIds[2];
-      const coords = [0, 0]
+      const coords = [0, 0];
+      const requestBody = {
+        position : coords
+      }
       await api.get('/api/v1/games/'+ gameIds[1] + '/legalMoves')
       .set("Authorization", 'Bearer ' + createToken(userId))
-      .send(coords)
+      .send(requestBody)
       .expect(403)
     })
   })
