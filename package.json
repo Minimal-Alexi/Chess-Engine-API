@@ -9,7 +9,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./dist/src/index.js",
     "dev": "cross-env NODE_ENV=development nodemon --exec npx ts-node ./src/index.ts",
-    "build": "npx tsc --build",
+    "build": "tsc --build --clean && tsc --build",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand"
   },
   "author": "",
