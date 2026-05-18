@@ -141,7 +141,7 @@ describe('User Controller', () => {
       .set("Authorization", 'Bearer LIAR')
       .expect(401)
   })
-  describe("Get all users", async () => {
+  describe("Get all users", () => {
     it("Should return a list of all users, without personal data.", async () => {
       await api.get(`api/v1/users/`)
       .set("Authorization", `Bearer ${createToken(userId)}`)
@@ -153,7 +153,7 @@ describe('User Controller', () => {
         })
     })
   })
-  describe("Get user by id", async () => {
+  describe("Get user by id", () => {
     it("Should return a users profile and personal data (WITHOUT PASSWORD) if they're the account owner", async () => {
       await api.get(`api/v1/users/${userId}`) 
       .set("Authorization", `Bearer ${createToken(userId)}`)
