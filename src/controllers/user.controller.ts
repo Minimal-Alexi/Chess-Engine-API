@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { findUserByEmail, createUser } from '../service/user.service';
 import bcrypt from 'bcrypt';
 import { NR_OF_SALTING_ROUNDS } from '../config/constants';
+import createToken from '../utils/createToken';
 
 const registerUser = async (req: Request, res: Response) => {
     const { username, email, password } = req.body;
@@ -21,7 +22,10 @@ const registerUser = async (req: Request, res: Response) => {
         const user = await createUser(username, email, bcrypt.hashSync(password, NR_OF_SALTING_ROUNDS).toString());
         res.status(201).json({
             "message": "User registered successfully",
-            "user": user.toJSON()
+            "user": {
+                "session_id":createToken(user.id),
+                ...user.toJSON()
+            }
         });
     } catch (error) {
         console.error('Error registering user:', error);
@@ -41,7 +45,10 @@ const loginUser = async (req: Request, res: Response) => {
         }
         res.status(200).json({
             "message": "Login successful",
-            "user": user.toJSON()
+            "user": {
+                "session_id":createToken(user.id),
+                ...user.toJSON()
+            }
         });
     } catch (error) {
         console.error('Error logging in user:', error);
