@@ -49,4 +49,12 @@ const loginUser = async (req: Request, res: Response) => {
     }
 }
 
-export { registerUser,loginUser };
+const getAllUsers = async (req: Request, res:Response) => {
+
+}
+
+const getUserById = async (req: Request, res:Response) => {
+    
+}
+
+export { registerUser,loginUser, getAllUsers, getUserById };
