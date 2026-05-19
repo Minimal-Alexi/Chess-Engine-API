@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { findUserByEmail, createUser, getAllUsersList } from '../service/user.service';
+import { findUserByEmail, createUser, getAllUsersList, findUserById } from '../service/user.service';
 import bcrypt from 'bcrypt';
 import { NR_OF_SALTING_ROUNDS } from '../config/constants';
 import createToken from '../utils/createToken';
@@ -75,7 +75,31 @@ const getAllUsers = async (req: Request, res:Response) => {
 }
 
 const getUserById = async (req: Request, res:Response) => {
-    return res.status(404).json({error:"Not implemented yet."});
+    try{
+        const targetUserId = Number(req.params.targetUserId);
+        const userId = (req as any).user;
+
+        const user = await findUserById(targetUserId);
+        
+        if(!user){
+            return res.status(404).json({"message":"Couldn't find user."})
+        }
+
+        if (userId == targetUserId) {
+            return res.status(200).json({
+                "user": user.toJSON()
+            })
+        }
+        return res.status(200).json({
+            "user": {
+                "username": user.username,
+                "id": user.id
+            }
+        })
+    }catch(error){
+        console.error('Error fetching user: ',error);
+        res.status(500).json({error: 'Failed to get user.'})
+    }
 }
 
 export { registerUser,loginUser, getAllUsers, getUserById };

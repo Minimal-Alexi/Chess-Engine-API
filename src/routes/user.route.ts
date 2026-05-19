@@ -8,6 +8,6 @@ router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.use(requireAuth);
 router.get('/',getAllUsers);
-router.get('/:userId',getUserById);
+router.get('/:targetUserId',getUserById);
 
 export default router;

@@ -27,7 +27,7 @@ beforeEach(async () => {
       ('test2', 'test2@example.com', '${bcrypt.hashSync('password2', NR_OF_SALTING_ROUNDS).toString()}')
       RETURNING user_id;
   `);
-  userId = userResult.rows[0];
+  userId = userResult.rows[0].user_id;
 });
 
 describe('User Controller', () => {
@@ -143,6 +143,7 @@ describe('User Controller', () => {
   })
   describe("Get all users", () => {
     it("Should return a list of all users, without personal data.", async () => {
+      console.log(`route id: ${userId}`)
       await api.get(`/api/v1/users/`)
       .set("Authorization", `Bearer ${createToken(userId)}`)
         .expect(200)
@@ -165,7 +166,7 @@ describe('User Controller', () => {
       })
     })
     it("Should return a users profile without personal data if they're just an opponent.",  async () => {
-      await api.get(`/api/v1/users/${userId}`) 
+      await api.get(`/api/v1/users/${userId + 1}`) 
       .set("Authorization", `Bearer ${createToken(userId)}`)
       .expect(200)
       .expect(res => {
