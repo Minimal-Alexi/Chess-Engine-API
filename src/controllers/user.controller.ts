@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { findUserByEmail, createUser } from '../service/user.service';
+import { findUserByEmail, createUser, getAllUsersList } from '../service/user.service';
 import bcrypt from 'bcrypt';
 import { NR_OF_SALTING_ROUNDS } from '../config/constants';
 import createToken from '../utils/createToken';
@@ -57,11 +57,25 @@ const loginUser = async (req: Request, res: Response) => {
 }
 
 const getAllUsers = async (req: Request, res:Response) => {
-
+    try{
+        const usersArray = await getAllUsersList()
+        console.log
+        const usersArrayJson = usersArray.map(user => ({
+            id: user.id,
+            username: user.username
+        }));
+        res.status(200).json({
+            "message":"Succesfully got all users.",
+            "users":usersArrayJson
+        })
+    }catch(error){
+        console.error('Error fetching users: ',error);
+        res.status(500).json({error: 'Failed to get users.'})
+    }
 }
 
 const getUserById = async (req: Request, res:Response) => {
-    
+    return res.status(404).json({error:"Not implemented yet."});
 }
 
 export { registerUser,loginUser, getAllUsers, getUserById };

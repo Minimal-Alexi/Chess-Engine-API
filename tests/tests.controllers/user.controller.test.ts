@@ -143,7 +143,7 @@ describe('User Controller', () => {
   })
   describe("Get all users", () => {
     it("Should return a list of all users, without personal data.", async () => {
-      await api.get(`api/v1/users/`)
+      await api.get(`/api/v1/users/`)
       .set("Authorization", `Bearer ${createToken(userId)}`)
         .expect(200)
         .expect(res => {
@@ -155,7 +155,7 @@ describe('User Controller', () => {
   })
   describe("Get user by id", () => {
     it("Should return a users profile and personal data (WITHOUT PASSWORD) if they're the account owner", async () => {
-      await api.get(`api/v1/users/${userId}`) 
+      await api.get(`/api/v1/users/${userId}`) 
       .set("Authorization", `Bearer ${createToken(userId)}`)
       .expect(200)
       .expect(res => {
@@ -165,7 +165,7 @@ describe('User Controller', () => {
       })
     })
     it("Should return a users profile without personal data if they're just an opponent.",  async () => {
-      await api.get(`api/v1/users/${userId}`) 
+      await api.get(`/api/v1/users/${userId}`) 
       .set("Authorization", `Bearer ${createToken(userId)}`)
       .expect(200)
       .expect(res => {
@@ -174,7 +174,7 @@ describe('User Controller', () => {
       })
     })
     it("Should return 404 if the user doesn't exist.", async () => {
-      await api.get(`api/v1/users/${userId + 2}`)
+      await api.get(`/api/v1/users/${userId + 2}`)
       .set("Authorization", `Bearer ${createToken(userId)}`)
       .expect(404) 
     })
