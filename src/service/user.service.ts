@@ -1,6 +1,17 @@
 import { User } from '../models/user.model';
 const pool = require('../config/database').pool;
 
+export const getAllUsersList = async ():Promise<Array<User>> => {
+    const result = await pool.query("SELECT * FROM users;");
+
+    const userArray:Array<User> = []
+    for(const user of result.rows){
+        userArray.push(new User(user.id,user.username,user.email,user.password))
+    }
+
+    return userArray
+}
+
 export const findUserById = async (id: number): Promise<User | null> => {
     const result = await pool.query('SELECT * FROM users WHERE user_id = $1', [id]);
     

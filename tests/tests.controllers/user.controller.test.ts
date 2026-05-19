@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import { NR_OF_SALTING_ROUNDS } from "../../src/config/constants";
 import app from '../../src/app';
 import supertest from 'supertest';
+import createToken from '../../src/utils/createToken';
 
 const api = supertest(app);
 
@@ -16,13 +17,17 @@ jest.mock('../../src/config/database', () => {
 
 const pool = require('../../src/config/database').pool;
 
+let userId:number;
+
 beforeEach(async () => {
-  await pool.query(`
+  const userResult = await pool.query(`
     INSERT INTO users (username, email, password)
     VALUES
       ('test1', 'test1@example.com', '${bcrypt.hashSync('password1', NR_OF_SALTING_ROUNDS).toString()}'),
-      ('test2', 'test2@example.com', '${bcrypt.hashSync('password2', NR_OF_SALTING_ROUNDS).toString()}');
+      ('test2', 'test2@example.com', '${bcrypt.hashSync('password2', NR_OF_SALTING_ROUNDS).toString()}')
+      RETURNING user_id;
   `);
+  userId = userResult.rows[0].user_id;
 });
 
 describe('User Controller', () => {
@@ -127,6 +132,55 @@ describe('User Controller', () => {
       });
     });
   });
+  describe("Non-auth related routes", () => {
+    it("Should expect authorization. (401)", async () => {
+    await api.get('/api/v1/users/')
+      .expect(401)
+
+    await api.get('/api/v1/users/')
+      .set("Authorization", 'Bearer LIAR')
+      .expect(401)
+  })
+  describe("Get all users", () => {
+    it("Should return a list of all users, without personal data.", async () => {
+      console.log(`route id: ${userId}`)
+      await api.get(`/api/v1/users/`)
+      .set("Authorization", `Bearer ${createToken(userId)}`)
+        .expect(200)
+        .expect(res => {
+          expect(res.body).toHaveProperty("users")
+          expect(res.body.users[0]).not.toHaveProperty("email")
+          expect(res.body.users[0]).not.toHaveProperty("password")
+        })
+    })
+  })
+  describe("Get user by id", () => {
+    it("Should return a users profile and personal data (WITHOUT PASSWORD) if they're the account owner", async () => {
+      await api.get(`/api/v1/users/${userId}`) 
+      .set("Authorization", `Bearer ${createToken(userId)}`)
+      .expect(200)
+      .expect(res => {
+        expect(res.body.user).toHaveProperty("username")
+        expect(res.body.user).toHaveProperty("email")
+        expect(res.body.user).not.toHaveProperty("password")
+      })
+    })
+    it("Should return a users profile without personal data if they're just an opponent.",  async () => {
+      await api.get(`/api/v1/users/${userId + 1}`) 
+      .set("Authorization", `Bearer ${createToken(userId)}`)
+      .expect(200)
+      .expect(res => {
+        expect(res.body.user).not.toHaveProperty("email")
+        expect(res.body.user).not.toHaveProperty("password")
+      })
+    })
+    it("Should return 404 if the user doesn't exist.", async () => {
+      await api.get(`/api/v1/users/${userId + 2}`)
+      .set("Authorization", `Bearer ${createToken(userId)}`)
+      .expect(404) 
+    })
+  })
+  })
 });
 
 afterEach(async () => {

@@ -14,7 +14,7 @@ export class User {
 
     toJSON() {
         return {
-            session_id: createToken(this.id),
+            id: this.id,
             username: this.username,
             email: this.email
         };
