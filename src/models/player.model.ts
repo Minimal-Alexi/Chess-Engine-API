@@ -1,22 +1,21 @@
-import { findUserById } from "../service/user.service";
+import { User } from "./user.model";
 
 export class Player{
-    userId : number;
+    user : User;
     gameId : number;
     team : string;
 
-    constructor(userId:number,gameId:number,team:string){
-        this.userId = userId;
+    constructor(user:User,gameId:number,team:string){
+        this.user = user;
         this.gameId = gameId;
         this.team = team;
     }
 
-    async toJSON() {
-        const user = await findUserById(this.userId)
+    toJSON() {
         return {
             [this.team]:{
-                userId: this.userId,
-                username: user?.username
+                userId: this.user.id,
+                username: this.user.username
             }
         }
     }

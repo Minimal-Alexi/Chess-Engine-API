@@ -19,14 +19,14 @@ export class Game {
             throw new Error("Player list not initialized for game " + this.id);
         }
 
-        return this.players.some(player => player.userId === userId);
+        return this.players.some(player => player.user.id === userId);
     }
 
     verifyTurnOrder(userId: number):boolean{
         if(!this.players){
             throw new Error("Player list not initialized for game " + this.id);
         }
-        const player = this.players.find(player => player.userId === userId);
+        const player = this.players.find(player => player.user.id === userId);
         return (player?.team === 'white' && this.turnCounter % 2 === 0) ||
         (player?.team !== 'white' && this.turnCounter % 2 !== 0);
     }
@@ -36,10 +36,10 @@ export class Game {
             throw new Error("Player list not initialized for game " + this.id);
         }
 
-        return this.players.find(player => player.userId === userId)?.team!
+        return this.players.find(player => player.user.id === userId)?.team!
     }
 
-    async toJSON() {
+    toJSON() {
         return {
             id: this.id,
             turnCounter: this.turnCounter,
@@ -47,12 +47,10 @@ export class Game {
                 fen: this.state,
                 board: createBoardMap(this.state)
             },
-            players: this.players?.length == 2
-                ? {
-                    ...(this.players[0] ? await this.players[0].toJSON() : {}),
-                    ...(this.players[1] ? await this.players[1].toJSON() : {})
-                }
-                : {}
+            players: {
+                ...this.players[0],
+                ...this.players[1]
+            }
         };
     }
 }
