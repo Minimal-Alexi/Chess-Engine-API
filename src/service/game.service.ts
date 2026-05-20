@@ -1,57 +1,81 @@
 import { Game } from "../models/game.model"
 import { Player } from "../models/player.model";
+import { User } from "../models/user.model";
 import { createBoardMap, getLegalMoves, isCheckMate, makeMove } from "../utils/boardMapUtils";
 const pool = require('../config/database').pool;
 
-export const createGameService = async (playerOneId:number, playerTwoId:number):Promise<Game> => {
+export const createGameService = async (playerOne:User, playerTwo:User):Promise<Game> => {
     const gameResult = (await pool.query(`
     INSERT INTO games (turn_counter, game_state)
     VALUES (DEFAULT, DEFAULT)
     RETURNING game_id, turn_counter, game_state;
     `)).rows[0];
     
-    const whitePlayer = (await pool.query(
+    await pool.query(
         `
-        INSERT INTO players(game_id,user_id,team) VALUES ($1, $2, $3) RETURNING *;
+        INSERT INTO players(game_id,user_id,team) VALUES ($1, $2, $3);
         `
-        ,[gameResult.game_id, playerOneId, "white"]
-    )).rows[0]
+        ,[gameResult.game_id, playerOne.id, "white"]
+    )
 
-    const blackPlayer = (await pool.query(
+    await pool.query(
         `
-        INSERT INTO players(game_id,user_id,team) VALUES ($1, $2, $3) RETURNING *;
+        INSERT INTO players(game_id,user_id,team) VALUES ($1, $2, $3);
         `
-        ,[gameResult.game_id, playerTwoId, "black"]
-    )).rows[0]
+        ,[gameResult.game_id, playerTwo.id, "black"]
+    )
 
     return new Game
     (
         gameResult.game_id,
         gameResult.turn_counter,
         gameResult.game_state,
-        [new Player(whitePlayer.user_id,gameResult.game_id,"white"), new Player(blackPlayer.user_id,gameResult.game_id,"black")])
+        [new Player(playerOne,gameResult.game_id,"white"), new Player(playerTwo,gameResult.game_id,"black")])
 }
 
 export const findGameById = async(id:number):Promise<Game|null> => {
-    const gameSearch = await pool.query(`SELECT * FROM games WHERE game_id = $1`, [id])
-    const playerSearch = await pool.query(`SELECT * FROM players WHERE game_id = $1`, [id])
+    const result = await pool.query(`
+    SELECT
+        g.*,
+        p.team,
+        u.user_id,
+        u.username
+    FROM games g
+    LEFT JOIN players p
+        ON g.game_id = p.game_id
+    LEFT JOIN users u
+        ON p.user_id = u.user_id
+    WHERE g.game_id = $1
+    `, [id]);
 
-    const gameRow = gameSearch.rows[0]
-    if(!gameRow){
+    const rows = result.rows;
+
+    if (rows.length === 0) {
         return null;
     }
 
-    const playerArray : Array<Player> = []
+    const game = rows[0];
 
-    for(const player of playerSearch.rows){
-        playerArray.push(new Player(player.user_id,player.game_id,player.team))
-    }
+    const players = rows.map((row: { user_id: number; username: string; game_id: number; team: string; }) => {
+        const user = new User(
+            row.user_id,
+            row.username,
+            "irrelevant",
+            "irrelevant"
+        );
+
+        return new Player(
+            user,
+            row.game_id,
+            row.team
+        );
+    });
 
     return new Game(
-        gameRow.game_id,
-        gameRow.turn_counter,
-        gameRow.game_state,
-        playerArray
+        game.game_id,
+        game.turn_counter,
+        game.game_state,
+        players
     )
 
 }
@@ -105,23 +129,16 @@ export const updateGame = async (game: Game): Promise<Game | null> => {
             WHERE game_id = $3
             RETURNING *;
         `, [game.state, game.turnCounter, game.id])
-    const playerSearch = await pool.query(`SELECT * FROM players WHERE game_id = $1`, [game.id])
 
     if (!gameUpdate) {
         return null;
-    }
-
-    const playerArray: Array<Player> = []
-
-    for (const player of playerSearch.rows) {
-        playerArray.push(new Player(player.user_id, player.game_id, player.team))
     }
 
     return new Game(
         gameUpdate.game_id,
         gameUpdate.turn_counter,
         gameUpdate.game_state,
-        playerArray
+        game.players
     )
 }
 

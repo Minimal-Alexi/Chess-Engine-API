@@ -7,11 +7,11 @@ export class Game {
     state: string;
     players: Array<Player>
 
-    constructor(id: number, turnCounter: number, state: string | undefined, players: Array<Player> | undefined) {
+    constructor(id: number, turnCounter: number, state: string, players: Array<Player>) {
         this.id = id;
         this.turnCounter = turnCounter;
         this.state = state || "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-        this.players = players || []
+        this.players = players
     }
 
     isUserInGame(userId: number): boolean {
@@ -48,8 +48,8 @@ export class Game {
                 board: createBoardMap(this.state)
             },
             players: {
-                ...this.players[0],
-                ...this.players[1]
+                ...this.players[0].toJSON(),
+                ...this.players[1].toJSON()
             }
         };
     }
