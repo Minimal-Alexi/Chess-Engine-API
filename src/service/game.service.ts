@@ -80,26 +80,66 @@ export const findGameById = async(id:number):Promise<Game|null> => {
 
 }
 
-export const findUsersGames = async(userId:number):Promise<Array<Game>> => {
+export const findUsersGames = async (userId: number): Promise<Array<Game>> => {
     const gameSearch = await pool.query(
         `
-    SELECT games.*
-    FROM games
-    JOIN players
-        ON games.game_id = players.game_id
-    WHERE players.user_id = $1
-  `,
+        SELECT
+            g.game_id,
+            g.turn_counter,
+            g.game_state,
+
+            p.team,
+
+            u.user_id,
+            u.username
+
+        FROM games g
+
+        INNER JOIN players current_player
+            ON g.game_id = current_player.game_id
+
+        LEFT JOIN players p
+            ON g.game_id = p.game_id
+
+        LEFT JOIN users u
+            ON p.user_id = u.user_id
+
+        WHERE current_player.user_id = $1
+        `,
         [userId]
-    )
-
-    const gameArray: Array<Game> = []
-
-    for(const game of gameSearch.rows){
-        gameArray.push(new Game(game.game_id,game.turn_counter,game.game_state,undefined))
+    );
+    const gameMap = new Map<number, Game>();
+    for (const row of gameSearch.rows) {
+        // Create game once
+        if (!gameMap.has(row.game_id)) {
+            gameMap.set(
+                row.game_id,
+                new Game(
+                    row.game_id,
+                    row.turn_counter,
+                    row.game_state,
+                    []
+                )
+            );
+        }
+        const game = gameMap.get(row.game_id)!;
+        if (row.user_id) {
+            const user = new User(
+                row.user_id,
+                row.username,
+                "irrelevant",
+                "irrelevant"
+            );
+            const player = new Player(
+                user,
+                row.game_id,
+                row.team
+            );
+            game.players.push(player);
+        }
     }
-
-    return gameArray
-}
+    return Array.from(gameMap.values());
+};
 
 export const calculatePieceLegalMoves = async(game:Game,piecePos: [number,number], team: string):Promise<Array<Array<number>>> => {
     const boardMap = createBoardMap(game.state)
