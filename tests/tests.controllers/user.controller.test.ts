@@ -143,7 +143,6 @@ describe('User Controller', () => {
   })
   describe("Get all users", () => {
     it("Should return a list of all users, without personal data.", async () => {
-      console.log(`route id: ${userId}`)
       await api.get(`/api/v1/users/`)
       .set("Authorization", `Bearer ${createToken(userId)}`)
         .expect(200)
