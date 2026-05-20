@@ -192,7 +192,7 @@ describe('Game Controller', () => {
         [0, 0, 0, 0, 0, 0, 0, 0]
       ];
       const coords = [0, 0];
-      await api.get('/api/v1/games/' + gameIds[1] + `/legalMoves?x=${coords[0]}&y=${coords[1]}`)
+      await api.get('/api/v1/games/' + gameIds[0] + `/legalMoves?x=${coords[0]}&y=${coords[1]}`)
       .set("Authorization", 'Bearer ' + createToken(userId))
       .expect(200)
       .expect(res =>

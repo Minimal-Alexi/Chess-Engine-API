@@ -91,7 +91,7 @@ export const getPieceLegalMoves = async (req: Request, res: Response) => {
     const gameId = Number(req.params.gameId);
     const userId = (req as any).user;
     const game = await findGameById(gameId);
-    const position: [number,number] = req.body.position;
+    const position: [number,number] = [Number(req.query.x), Number(req.query.y)]
 
     if(!game){
         return res.status(404).json({message:"Couldn't find game. Are you sure that's the ID you were looking for?"});
