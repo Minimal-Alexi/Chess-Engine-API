@@ -245,7 +245,7 @@ const getPseudoLegalMoves = (
         for (const endangeredTile of endangeredTiles) {
             if (inBounds(coordsX + endangeredTile[0] * dir, coordsY + endangeredTile[1])) {
                 const target = map[coordsX + endangeredTile[0] * dir][coordsY + endangeredTile[1]];
-                if (target == ' ' || isUpper(map[selectedPieceLocation[0]][selectedPieceLocation[1]]) == isUpper(target)) {
+                if (target == ' ') {
                     mappedLegalMoves[coordsX + endangeredTile[0] * dir][coordsY + endangeredTile[1]] = 0;
                 }
             }
