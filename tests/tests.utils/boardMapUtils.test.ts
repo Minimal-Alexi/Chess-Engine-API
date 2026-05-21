@@ -615,6 +615,18 @@ describe("Test validateMove function", () => {
         ]
         expect(validateMove(boardMap, [7, 0], [6, 0], "white")).toBe(false)
         expect(validateMove(boardMap, [0, 0], [1, 0], "black")).toBe(false)
+
+        const pawnTest = [
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', 'P', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        ]
+        expect(validateMove(pawnTest, [6, 0], [5, 1], "white")).toBe(false)
     })
     it("Should check if the move can save the king from a check.", () => {
         const boardMap = [
