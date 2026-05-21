@@ -18,7 +18,17 @@ const connectDB = async () => {
     }
 };
 
+const closeDB = async() => {
+    try{
+        await pool.end();
+        console.log('D: Successfully disconnected database');
+    }catch(error){
+        console.error("E: Failed closing DB", error)
+    }
+}
+
 export {
     connectDB,
+    closeDB,
     pool
 }
